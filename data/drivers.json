@@ -1,0 +1,22 @@
+[
+  {
+    "nama": "Lewis Hamilton",
+    "negara": "Inggris",
+    "team": "Mercedes",
+    "statistik": {
+      "kemenangan": 103,
+      "podium": 197,
+      "pole_position": 104
+    }
+  },
+  {
+    "nama": "Max Verstappen",
+    "negara": "Belanda",
+    "team": "Red Bull Racing",
+    "statistik": {
+      "kemenangan": 61,
+      "podium": 102,
+      "pole_position": 39
+    }
+  }
+] 

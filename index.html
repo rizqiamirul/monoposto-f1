@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monoposto Formula One</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1 class="main-title">Monoposto Formula One</h1>
+  </header>
+  <nav id="main-navbar">
+    <a href="#drivers" id="nav-drivers">Drivers</a>
+    <a href="#teams" id="nav-teams">Teams</a>
+    <a href="#grandsprix" id="nav-grandsprix">Grand Prix</a>
+    <a href="#wdc" id="nav-wdc">World Driver Champions</a>
+    <a href="#wcc" id="nav-wcc">World Constructor Champions</a>
+  </nav>
+  <main>
+    <section id="drivers" class="f1-section">
+      <h2>Drivers</h2>
+      <button id="add-driver-btn" class="crud-btn">Tambah Driver</button>
+      <div id="drivers-list"></div>
+    </section>
+    <section id="teams" class="f1-section">
+      <h2>Teams</h2>
+      <button id="add-team-btn" class="crud-btn">Tambah Team</button>
+      <div id="teams-list"></div>
+    </section>
+    <section id="grandsprix" class="f1-section">
+      <h2>Grand Prix</h2>
+      <button id="add-gp-btn" class="crud-btn">Tambah Grand Prix</button>
+      <div id="grandsprix-list"></div>
+    </section>
+    <section id="wdc" class="f1-section">
+      <h2>World Driver Champions</h2>
+      <button id="add-wdc-btn" class="crud-btn">Tambah WDC</button>
+      <div id="wdc-list"></div>
+    </section>
+    <section id="wcc" class="f1-section">
+      <h2>World Constructor Champions</h2>
+      <button id="add-wcc-btn" class="crud-btn">Tambah WCC</button>
+      <div id="wcc-list"></div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2024 Rekap Formula One - Monoposto Fan</p>
+  </footer>
+  <div id="modal-bg" class="modal-bg" style="display:none;">
+    <div id="modal" class="modal"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 

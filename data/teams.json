@@ -1,0 +1,22 @@
+[
+  {
+    "nama": "Mercedes",
+    "negara": "Jerman",
+    "daftar_driver": ["Lewis Hamilton"],
+    "statistik": {
+      "kemenangan": 125,
+      "podium": 265,
+      "gelar_konstruktor": 8
+    }
+  },
+  {
+    "nama": "Red Bull Racing",
+    "negara": "Austria",
+    "daftar_driver": ["Max Verstappen"],
+    "statistik": {
+      "kemenangan": 118,
+      "podium": 249,
+      "gelar_konstruktor": 6
+    }
+  }
+] 

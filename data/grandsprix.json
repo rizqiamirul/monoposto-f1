@@ -1,0 +1,16 @@
+[
+  {
+    "nama": "Monaco Grand Prix",
+    "lokasi": "Monaco",
+    "tahun": 2024,
+    "pemenang": "Charles Leclerc",
+    "podium": ["Charles Leclerc", "Oscar Piastri", "Carlos Sainz Jr."]
+  },
+  {
+    "nama": "British Grand Prix",
+    "lokasi": "Silverstone, Inggris",
+    "tahun": 2024,
+    "pemenang": "Lewis Hamilton",
+    "podium": ["Lewis Hamilton", "Max Verstappen", "Lando Norris"]
+  }
+] 
