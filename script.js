@@ -915,14 +915,18 @@ function deleteWCC(idx) {
 document.getElementById('add-wcc-btn').onclick = () => addWCCForm();
 
 // --- CRUD GRAND PRIX ---
-function renderGrandPrix() {
+function renderGrandPrix(filterTahun = null) {
   console.log('renderGrandPrix() - grandsprix:', grandsprix);
   const el = document.getElementById('grandsprix-list');
-  if (!grandsprix || grandsprix.length === 0) {
+  let data = grandsprix;
+  if (filterTahun) {
+    data = grandsprix.filter(gp => String(gp.tahun) === String(filterTahun));
+  }
+  if (!data || data.length === 0) {
     el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data Grand Prix.</div>';
     return;
   }
-  el.innerHTML = grandsprix.map((gp, i) => `
+  el.innerHTML = data.map((gp, i) => `
     <div class="card">
       <div class="card-title"><strong>${gp.nama}</strong></div>
       <div class="card-detail">
@@ -935,6 +939,16 @@ function renderGrandPrix() {
     </div>
   `).join('');
 }
+
+function updateGrandPrixYearFilterOptions() {
+  const select = document.getElementById('filter-gp-tahun');
+  if (!select) return;
+  // Ambil semua tahun unik dari grandsprix
+  const tahunSet = new Set(grandsprix.map(gp => gp.tahun));
+  const tahunArr = Array.from(tahunSet).sort((a,b)=>b-a);
+  select.innerHTML = '<option value="">Semua Tahun</option>' + tahunArr.map(t => `<option value="${t}">${t}</option>`).join('');
+}
+
 function addGrandPrixForm(editIdx = null) {
   const gp = editIdx !== null ? grandsprix[editIdx] : {nama:'', tahun:'', pemenang:'', podium:[]};
   const driverOptions = drivers.map(d => `
@@ -1130,10 +1144,17 @@ async function loadData() {
   renderWDC();
   renderWCC();
   renderGrandPrix();
+  updateGrandPrixYearFilterOptions();
 }
 document.addEventListener('DOMContentLoaded', () => {
 loadData();
 setupCrudDelegation();
+const tahunSelect = document.getElementById('filter-gp-tahun');
+if (tahunSelect) {
+  tahunSelect.addEventListener('change', function() {
+    renderGrandPrix(this.value);
+  });
+}
 }); 
 
 document.getElementById('reset-data-btn').onclick = function() {

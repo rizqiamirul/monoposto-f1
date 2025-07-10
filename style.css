@@ -1344,3 +1344,69 @@ nav#main-navbar::-webkit-scrollbar {
     color: #d1d5db;
   }
 } 
+
+/* --- Grand Prix Year Filter --- */
+#filter-gp-tahun {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.1rem;
+  padding: 8px 32px 8px 14px;
+  border: 2px solid #1a237e;
+  border-radius: 8px;
+  background: #fff url('data:image/svg+xml;utf8,<svg fill="%231a237e" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center/18px 18px;
+  box-shadow: 0 2px 8px rgba(26,35,126,0.07);
+  color: #1a237e;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  margin-bottom: 18px;
+  min-width: 140px;
+  max-width: 220px;
+  cursor: pointer;
+}
+#filter-gp-tahun:hover, #filter-gp-tahun:focus {
+  border-color: #ffd600;
+  box-shadow: 0 4px 16px rgba(26,35,126,0.13);
+}
+#filter-gp-tahun option {
+  background: #fff;
+  color: #1a237e;
+}
+@media (max-width: 600px) {
+  #filter-gp-tahun {
+    font-size: 1rem;
+    padding: 8px 28px 8px 10px;
+    min-width: 100px;
+    max-width: 100%;
+  }
+} 
+
+/* --- Reset Data Button Hidden --- */
+.reset-hidden-btn {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 100;
+  background: #e53935;
+  color: #fff;
+  font-size: 0.92rem;
+  padding: 5px 14px;
+  border-radius: 18px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(229,57,53,0.07);
+  opacity: 0.18;
+  transition: opacity 0.2s, box-shadow 0.2s, background 0.2s;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.reset-hidden-btn:hover, .reset-hidden-btn:focus {
+  opacity: 0.95;
+  background: #c62828;
+  box-shadow: 0 4px 16px rgba(229,57,53,0.18);
+}
+@media (max-width: 600px) {
+  .reset-hidden-btn {
+    right: 10px;
+    bottom: 10px;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+  }
+} 
