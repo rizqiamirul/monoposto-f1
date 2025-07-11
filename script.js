@@ -2,7 +2,9 @@
 let drivers = [];
 let teams = [];
 let wdc = [];
+let wdcIndexMap = [];
 let wcc = [];
+let wccIndexMap = [];
 let grandsprix = [];
 
 // Mapping negara ke kode bendera (ISO 3166-1 alpha-2)
@@ -785,7 +787,10 @@ function renderWDC() {
     el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data WDC.</div>';
     return;
   }
-  el.innerHTML = wdc.map((item, i) => `
+  // Urutkan berdasarkan tahun menurun
+  const sortedWdc = [...wdc].map((item, idx) => ({item, idx})).sort((a, b) => b.item.tahun - a.item.tahun);
+  wdcIndexMap = sortedWdc.map(obj => obj.idx);
+  el.innerHTML = sortedWdc.map(({item}, i) => `
     <div class="card champion-card">
       <div class="champion-header">
         <div class="champion-year">${item.tahun}</div>
@@ -875,12 +880,12 @@ function submitWDC(e, idx) {
   if (idx === null) wdc.push(data);
   else wdc[idx] = data;
   saveAllToLocal();
-  hideFormLoading(form);
-  showFormSuccess(form);
-  setTimeout(() => {
-    closeModal();
-    renderWDC();
-  }, 300);
+    hideFormLoading(form);
+    showFormSuccess(form);
+    setTimeout(() => {
+  closeModal();
+  renderWDC();
+    }, 300);
 }
 function editWDC(idx) { addWDCForm(idx); }
 function deleteWDC(idx) {
@@ -900,11 +905,14 @@ function renderWCC() {
     el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data WCC.</div>';
     return;
   }
-  el.innerHTML = wcc.map((item, i) => `
+  // Urutkan berdasarkan tahun menurun
+  const sortedWcc = [...wcc].map((item, idx) => ({item, idx})).sort((a, b) => b.item.tahun - a.item.tahun);
+  wccIndexMap = sortedWcc.map(obj => obj.idx);
+  el.innerHTML = sortedWcc.map(({item}, i) => `
     <div class="card champion-card">
       <div class="champion-header">
         <div class="champion-year">${item.tahun}</div>
-        ${item.foto ? `<div class="champion-photo"><img src="${item.foto}" alt="${item.team}" onerror="this.style.display='none'"></div>` : '<div class="champion-photo-placeholder"><i class="champion-icon">🏁</i></div>'}
+        ${item.foto ? `<div class="champion-photo"><img src="${item.foto}" alt="${item.team}" class="champion-logo" onerror="this.style.display='none'"></div>` : '<div class="champion-photo-placeholder"><i class="champion-icon">🏁</i></div>'}
       </div>
       <div class="champion-info">
         <div class="champion-name">${item.team}</div>
@@ -977,12 +985,12 @@ function submitWCC(e, idx) {
   if (idx === null) wcc.push(data);
   else wcc[idx] = data;
   saveAllToLocal();
-  hideFormLoading(form);
-  showFormSuccess(form);
-  setTimeout(() => {
-    closeModal();
-    renderWCC();
-  }, 300);
+    hideFormLoading(form);
+    showFormSuccess(form);
+    setTimeout(() => {
+  closeModal();
+  renderWCC();
+    }, 300);
 }
 function editWCC(idx) { addWCCForm(idx); }
 function deleteWCC(idx) {
@@ -1260,20 +1268,20 @@ function setupCrudDelegation() {
   document.getElementById('wdc-list').onclick = function(e) {
     if (e.target.classList.contains('edit')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      editWDC(idx);
+      editWDC(wdcIndexMap[idx]);
     } else if (e.target.classList.contains('delete')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      deleteWDC(idx);
+      deleteWDC(wdcIndexMap[idx]);
     }
   };
   // WCC
   document.getElementById('wcc-list').onclick = function(e) {
     if (e.target.classList.contains('edit')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      editWCC(idx);
+      editWCC(wccIndexMap[idx]);
     } else if (e.target.classList.contains('delete')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      deleteWCC(idx);
+      deleteWCC(wccIndexMap[idx]);
     }
   };
   // GRAND PRIX

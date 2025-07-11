@@ -1,68 +1,112 @@
 # Monoposto Formula One
 
-Aplikasi web untuk mengelola data Formula One termasuk drivers, teams, grand prix, dan champions.
+Aplikasi web modern untuk mengelola data Formula One: pembalap, tim, Grand Prix, juara dunia pembalap (WDC), dan juara dunia konstruktor (WCC) dengan tampilan interaktif dan responsif.
 
-## Fitur
+## Fitur Utama
 
-- **Drivers Management**: Tambah, edit, hapus data pembalap
-- **Teams Management**: Tambah, edit, hapus data tim
-- **Grand Prix Management**: Tambah, edit, hapus data grand prix dengan filter tahun
-- **World Driver Champions (WDC)**: Kelola juara dunia pembalap dengan foto dan layout yang menarik
-- **World Constructor Champions (WCC)**: Kelola juara dunia konstruktor dengan foto dan layout yang menarik
-
-## Fitur Foto Champion
-
-Aplikasi sekarang mendukung foto untuk WDC dan WCC dengan layout yang menarik:
-
-### Cara Menambahkan Foto:
-1. Buka form tambah/edit WDC atau WCC
-2. Masukkan URL foto di field "Foto Driver" atau "Foto Team"
-3. Foto akan ditampilkan sebagai gambar lingkaran dengan border kuning
-4. Layout text akan di-center di bawah foto
-
-### Contoh URL Foto yang Bisa Digunakan:
-- **Max Verstappen**: `https://upload.wikimedia.org/wikipedia/commons/8/8a/Max_Verstappen_2017_Malaysia_3.jpg`
-- **Lewis Hamilton**: `https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg`
-- **Charles Leclerc**: `https://upload.wikimedia.org/wikipedia/commons/7/72/Charles_Leclerc_2019_Monaco_2.jpg`
-- **Lando Norris**: `https://upload.wikimedia.org/wikipedia/commons/8/8a/Lando_Norris_2019_Monaco_2.jpg`
-- **Red Bull Racing**: `https://upload.wikimedia.org/wikipedia/en/6/6e/Red_Bull_Racing_logo.png`
-- **Mercedes**: `https://upload.wikimedia.org/wikipedia/commons/6/6e/Mercedes-Benz_logo_2010.svg`
-- **Ferrari**: `https://upload.wikimedia.org/wikipedia/en/d/d2/Scuderia_Ferrari_Logo.png`
-- **McLaren**: `https://upload.wikimedia.org/wikipedia/en/6/6f/McLaren_Racing_logo.png`
-
-### Layout Champion yang Baru:
-- **Tahun**: Ditampilkan besar di atas dengan font Bebas Neue
-- **Foto**: Gambar lingkaran 120px dengan border kuning
-- **Nama**: Font besar dan bold di bawah foto
-- **Team**: Informasi team di bawah nama
-- **Badge**: Badge "World Driver/Constructor Champion" dengan gradient
-- **Actions**: Tombol edit dan hapus di bawah
-
-### Fitur Interaktif:
-- **Hover Effects**: Card akan naik dan membesar saat di-hover
-- **Photo Animation**: Foto akan rotate dan scale saat hover
-- **Color Transitions**: Warna akan berubah saat hover
-- **Responsive Design**: Menyesuaikan dengan ukuran layar
-- **Placeholder Icons**: Icon 🏆 untuk WDC dan 🏁 untuk WCC jika tidak ada foto
-
-### Catatan:
-- Field foto bersifat opsional
-- Jika URL foto tidak valid, gambar tidak akan ditampilkan dan akan diganti dengan icon
-- Layout responsive untuk mobile dan desktop
-- Animasi smooth untuk semua interaksi
+- **Manajemen Drivers**: Tambah, edit, hapus data pembalap lengkap dengan foto, negara, nomor balap, statistik kemenangan, podium, pole, dan afiliasi tim.
+- **Manajemen Teams**: Tambah, edit, hapus data tim F1, logo, negara, dua pembalap utama, statistik kemenangan, podium, dan gelar konstruktor.
+- **Grand Prix**: Kelola daftar Grand Prix, filter berdasarkan tahun, input pemenang dan podium, serta tampilan kartu modern dengan bendera dan hashtag otomatis.
+- **World Driver Champions (WDC)**: Kelola juara dunia pembalap per tahun. Foto pembalap diambil otomatis dari data driver jika tidak diisi manual.
+- **World Constructor Champions (WCC)**: Kelola juara dunia konstruktor per tahun. Foto/logo tim diambil otomatis dari data team jika tidak diisi manual.
+- **Integrasi Otomatis Foto**: Saat menambah WDC/WCC, foto akan otomatis diambil dari data driver/team jika field foto dikosongkan.
+- **Tampilan Modern & Responsif**: Semua kartu dan form didesain modern, interaktif, dan responsif untuk desktop & mobile.
+- **Reset Data**: Kembalikan data ke kondisi awal dari file JSON dengan satu klik.
 
 ## Cara Penggunaan
 
-1. Buka `index.html` di browser
-2. Navigasi ke tab yang diinginkan (Drivers, Teams, Grand Prix, WDC, WCC)
-3. Klik "Tambah" untuk menambah data baru
-4. Klik "Edit" untuk mengubah data yang ada
-5. Klik "Hapus" untuk menghapus data
+1. **Buka `index.html` di browser** (disarankan Chrome/Edge/Firefox).
+2. Navigasi ke tab fitur: Drivers, Teams, Grand Prix, WDC, WCC.
+3. Klik tombol "Tambah" untuk menambah data baru.
+4. Klik "Edit" untuk mengubah data, "Hapus" untuk menghapus.
+5. Untuk WDC/WCC, pilih driver/team, foto akan otomatis terisi jika sudah ada di data driver/team.
+6. Gunakan filter tahun di Grand Prix untuk melihat GP per musim.
+7. Klik "Reset Data" untuk mengembalikan semua data ke kondisi awal.
 
-## Data Storage
+## Struktur Data
 
-Data disimpan di localStorage browser dan akan tetap tersimpan sampai di-reset atau cache dibersihkan.
+- **Drivers**: `nama`, `nomor_balap`, `negara`, `team`, `kemenangan`, `podium`, `pole`, `foto`
+- **Teams**: `nama`, `negara`, `logo`, `driver1`, `driver2`, `kemenangan`, `podium`, `gelar`
+- **Grand Prix**: `nama`, `tahun`, `pemenang`, `podium[]`
+- **WDC**: `tahun`, `driver`, `team`, `foto` (otomatis dari driver jika kosong)
+- **WCC**: `tahun`, `team`, `foto` (otomatis dari team jika kosong)
 
-## Reset Data
+### Contoh Data Driver
+```json
+{
+  "nama": "Oscar Piastri",
+  "nomor_balap": "81",
+  "negara": "Australia",
+  "team": "McLaren F1 Team",
+  "kemenangan": 2,
+  "podium": 5,
+  "pole": 1,
+  "foto": "https://example.com/piastri.jpg"
+}
+```
 
-Klik tombol "Reset Data" untuk mengembalikan semua data ke kondisi awal dari file JSON. 
+### Contoh Data Team
+```json
+{
+  "nama": "McLaren F1 Team",
+  "negara": "United Kingdom",
+  "logo": "https://example.com/mclaren-logo.png",
+  "driver1": "Oscar Piastri",
+  "driver2": "Lando Norris",
+  "kemenangan": 8,
+  "podium": 20,
+  "gelar": 8
+}
+```
+
+### Contoh Data Grand Prix
+```json
+{
+  "nama": "Monaco Grand Prix",
+  "tahun": 2025,
+  "pemenang": "Lewis Hamilton",
+  "podium": ["Lewis Hamilton", "Oscar Piastri", "George Russell"]
+}
+```
+
+### Contoh Data WDC
+```json
+{
+  "tahun": 2025,
+  "driver": "Oscar Piastri",
+  "team": "McLaren F1 Team",
+  "foto": "" // Akan otomatis diisi dari data driver jika kosong
+}
+```
+
+### Contoh Data WCC
+```json
+{
+  "tahun": 2025,
+  "team": "McLaren F1 Team",
+  "foto": "" // Akan otomatis diisi dari data team jika kosong
+}
+```
+
+## Teknologi yang Digunakan
+- HTML5, CSS3 (modern, responsive, dark mode ready)
+- JavaScript (tanpa framework, mudah dikembangkan)
+- LocalStorage untuk penyimpanan data
+- File JSON untuk data awal
+
+## Tips & Troubleshooting
+- **Foto tidak muncul?** Pastikan URL foto valid dan driver/team sudah ada di data utama.
+- **Data tidak tersimpan?** Pastikan browser mengizinkan LocalStorage.
+- **Reset Data**: Klik tombol "Reset Data" di pojok kanan bawah untuk mengembalikan data ke default.
+- **Mobile Friendly**: Semua fitur responsif, bisa diakses dari HP/tablet.
+
+## Catatan Penting
+- Semua data disimpan di LocalStorage browser, tidak akan hilang kecuali di-reset atau cache dibersihkan.
+- Field foto pada WDC/WCC opsional, akan otomatis diisi jika driver/team sudah ada di data utama.
+- Layout dan style dapat dimodifikasi sesuai kebutuhan (lihat file `style.css`).
+
+---
+
+Aplikasi ini dibuat untuk fans F1 yang ingin rekap data musim, statistik, dan juara dengan tampilan modern dan mudah digunakan.
+
+Jika ada bug, saran, atau ingin kontribusi, silakan edit file ini atau hubungi developer. 
