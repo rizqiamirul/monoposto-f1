@@ -423,7 +423,7 @@ function submitDriver(e, idx) {
     team: f.team.value,
       kemenangan: Number(f.kemenangan.value||0),
       podium: Number(f.podium.value||0),
-      pole: Number(f.pole.value||0),
+      gelar: Number(f.gelar.value||0),
       foto: f.foto.value || ''
   };
   if (idx === null) drivers.push(data);
@@ -462,7 +462,7 @@ function renderDrivers() {
           <div class="driver-stats">
             <span class="driver-stat-badge">Win: ${d.kemenangan}</span>
             <span class="driver-stat-badge podium">Podium: ${d.podium}</span>
-            <span class="driver-stat-badge pole">Pole: ${d.pole}</span>
+            <span class="driver-stat-badge gelar">Gelar: ${d.gelar||0}</span>
           </div>
           <div class="driver-actions">
           <button class="crud-action edit" onclick="editDriver(${i})">Edit</button>
@@ -475,54 +475,37 @@ function renderDrivers() {
 }
 
 function addDriverForm(editIdx = null, prefill = {}) {
-  const item = editIdx !== null ? drivers[editIdx] : {nama:'', nomor_balap:'', negara:'', team:'', kemenangan:0, podium:0, pole:0, foto:''};
-  const teamOptions = teams.map(t => `<option value="${t.nama}"${item.team===t.nama?' selected':''}>${t.nama}</option>`).join('');
+  const item = editIdx !== null ? drivers[editIdx] : {nama:'', nomor_balap:'', negara:'', team:'', kemenangan:0, podium:0, gelar:0, foto:''};
   showModal(`
     <button class='close-modal' onclick='closeModal()'>&times;</button>
     <h3>${editIdx!==null?'Edit':'Tambah'} Driver</h3>
-    <form onsubmit="submitDriver(event,${editIdx!==null?editIdx:'null'})">
+    <form id="driver-form" onsubmit="submitDriver(event,${editIdx!==null?editIdx:'null'})">
         <div class="form-group">
-          <label class="required">Nama Driver</label>
-        <input name="nama" value="${item.nama}" required placeholder="Contoh: Oscar Piastri">
+        <label class="required">Nama</label>
+        <input name="nama" value="${item.nama||prefill.nama||''}" required placeholder="Contoh: Oscar Piastri">
           <div class="error-message"></div>
         </div>
         <div class="form-group">
           <label class="required">Nomor Balap</label>
-        <input name="nomor_balap" type="number" value="${item.nomor_balap}" required placeholder="Contoh: 81" min="1" max="99">
+        <input name="nomor_balap" value="${item.nomor_balap||prefill.nomor_balap||''}" required placeholder="Contoh: 81">
           <div class="error-message"></div>
         </div>
         <div class="form-group">
           <label class="required">Negara</label>
-        <input name="negara" value="${item.negara}" required placeholder="Contoh: Australia">
+        <input name="negara" value="${item.negara||prefill.negara||''}" required placeholder="Contoh: Australia">
           <div class="error-message"></div>
         </div>
         <div class="form-group">
           <label>Team</label>
-          <select name="team">
-          <option value="">-</option>
-          ${teamOptions}
-          </select>
-          <div class="error-message"></div>
+        <input name="team" value="${item.team||prefill.team||''}" placeholder="Contoh: McLaren F1 Team">
         </div>
       <div class="form-group">
-        <label>Foto Driver (URL)</label>
-        <input name="foto" type="url" value="${item.foto || ''}" placeholder="https://example.com/driver-photo.jpg">
-        <div class="error-message"></div>
-        <small style="color:#666;font-size:0.85rem;">Opsional: Masukkan URL foto driver</small>
+        <label>Gelar Juara Dunia</label>
+        <input name="gelar" type="number" value="${item.gelar||0}" min="0">
       </div>
-      <div class="form-grid">
         <div class="form-group">
-          <label>Kemenangan</label>
-          <input name="kemenangan" type="number" value="${item.kemenangan||0}" min="0">
-        </div>
-        <div class="form-group">
-          <label>Podium</label>
-          <input name="podium" type="number" value="${item.podium||0}" min="0">
-      </div>
-      <div class="form-group">
-          <label>Pole</label>
-          <input name="pole" type="number" value="${item.pole||0}" min="0">
-        </div>
+        <label>Foto (URL)</label>
+        <input name="foto" value="${item.foto||''}" placeholder="https://example.com/foto.jpg">
       </div>
       <div class="modal-actions">
         <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
@@ -668,14 +651,6 @@ function addTeamForm(editIdx = null, formState = null) {
         <input name="driver2" value="${item.driver2||''}" placeholder="Contoh: Lando Norris">
           </div>
       <div class="form-grid">
-        <div class="form-group">
-          <label>Kemenangan</label>
-          <input name="kemenangan" type="number" value="${item.kemenangan||0}" min="0">
-        </div>
-        <div class="form-group">
-          <label>Podium</label>
-          <input name="podium" type="number" value="${item.podium||0}" min="0">
-        </div>
       <div class="form-group">
           <label>Gelar Konstruktor</label>
           <input name="gelar" type="number" value="${item.gelar||0}" min="0">
@@ -1060,6 +1035,20 @@ function renderGrandPrix(filterTahun = null) {
     'Qatar Grand Prix': 'qa',
     'Abu Dhabi Grand Prix': 'ae',
     'Las Vegas Grand Prix': 'us',
+    // Tambahan
+    'Turkish Grand Prix': 'tr',
+    'Turkey Grand Prix': 'tr',
+    'Portugese Grand Prix': 'pt',
+    'Portugal Grand Prix': 'pt',
+    'German Grand Prix': 'de',
+    'Germany Grand Prix': 'de',
+    'Russian Grand Prix': 'ru',
+    'Russia Grand Prix': 'ru',
+    'Malaysian Grand Prix': 'my',
+    'Malaysia Grand Prix': 'my',
+    'French Grand Prix': 'fr',
+    'France Grand Prix': 'fr',
+    'Tuscany Grand Prix': 'it',
   };
   // Mapping gambar sirkuit (jika ada)
   const circuitImgMap = {
@@ -1092,6 +1081,7 @@ function renderGrandPrix(filterTahun = null) {
       <div class="card gp-card">
         <div class="gp-card-header">
           <div class="gp-header-flag">${flag}</div>
+          <div class="gp-round">Round ${i+1}</div>
           <div class="gp-header-title">${gp.nama}</div>
           <div class="gp-header-year">${yearBadge}</div>
         </div>
@@ -1118,13 +1108,20 @@ function updateGrandPrixYearFilterOptions() {
 
 function addGrandPrixForm(editIdx = null) {
   const gp = editIdx !== null ? grandsprix[editIdx] : {nama:'', tahun:'', pemenang:'', podium:[]};
-  const driverOptions = drivers.map(d => `
-    <div class="checkbox-item">
-      <input type="checkbox" name="podium" value="${d.nama}" id="podium_${d.nama.replace(/\s+/g, '_')}"${gp.podium && gp.podium.includes(d.nama)?' checked':''}>
-      <label for="podium_${d.nama.replace(/\s+/g, '_')}">${d.nama} #${d.nomor_balap||'-'}</label>
-    </div>
-  `).join('');
-  
+  // Dropdown podium
+  function podiumDropdown(selected, excludeList, podiumIdx) {
+    return `<select name="podium${podiumIdx+1}" required>
+      <option value="">Pilih Pembalap</option>
+      ${drivers.filter(d => !excludeList.includes(d.nama) || d.nama === selected).map(d => `<option value='${d.nama}'${selected===d.nama?' selected':''}>${d.nama} #${d.nomor_balap||'-'}</option>`).join('')}
+    </select>`;
+  }
+  const podium1 = gp.podium?.[0] || '';
+  const podium2 = gp.podium?.[1] || '';
+  const podium3 = gp.podium?.[2] || '';
+  // Exclude yang sudah dipilih di podium sebelumnya
+  const podium1List = [];
+  const podium2List = [podium1].filter(Boolean);
+  const podium3List = [podium1, podium2].filter(Boolean);
   showModal(`
     <button class='close-modal' onclick='closeModal()'>&times;</button>
     <h3>${editIdx!==null?'Edit':'Tambah'} Grand Prix</h3>
@@ -1141,7 +1138,6 @@ function addGrandPrixForm(editIdx = null) {
           <div class="error-message"></div>
         </div>
       </div>
-      
       <div class="form-group">
         <label class="required">Pemenang</label>
         <select name="pemenang" required>
@@ -1150,40 +1146,108 @@ function addGrandPrixForm(editIdx = null) {
         </select>
         <div class="error-message"></div>
       </div>
-      
       <div class="form-group">
-        <label class="required">Podium (Pilih minimal 3 pembalap)</label>
-        <div class="checkbox-group">
-          ${driverOptions}
-        </div>
+        <label class="required">Podium 1</label>
+        ${podiumDropdown(podium1, podium1List, 0)}
+        <label class="required">Podium 2</label>
+        ${podiumDropdown(podium2, podium2List, 1)}
+        <label class="required">Podium 3</label>
+        ${podiumDropdown(podium3, podium3List, 2)}
         <div class="error-message" id="gp-podium-error"></div>
       </div>
-      
       <div class="modal-actions">
         <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
         <button type="submit" class="crud-btn">${editIdx!==null?'Update':'Simpan'} Grand Prix</button>
       </div>
     </form>
   `);
+  // Tambahkan event listener untuk update dropdown agar tidak dobel
+  const form = document.getElementById('gp-form');
+  function updateDropdowns() {
+    const p1 = form.podium1.value;
+    const p2 = form.podium2.value;
+    // Update podium2
+    form.podium2.innerHTML = `<option value="">Pilih Pembalap</option>` +
+      drivers.filter(d => ![p1].includes(d.nama) || d.nama === p2).map(d => `<option value='${d.nama}'${p2===d.nama?' selected':''}>${d.nama} #${d.nomor_balap||'-'}</option>`).join('');
+    // Update podium3
+    const p3 = form.podium3.value;
+    form.podium3.innerHTML = `<option value="">Pilih Pembalap</option>` +
+      drivers.filter(d => ![p1,p2].includes(d.nama) || d.nama === p3).map(d => `<option value='${d.nama}'${p3===d.nama?' selected':''}>${d.nama} #${d.nomor_balap||'-'}</option>`).join('');
+  }
+  form.podium1.addEventListener('change', updateDropdowns);
+  form.podium2.addEventListener('change', updateDropdowns);
 }
+
+// Update statistik driver dan team dari data Grand Prix
+function updateStatsFromGrandPrix() {
+  // Pastikan semua driver/tim yang muncul di Grand Prix ada di drivers/teams
+  grandsprix.forEach(gp => {
+    // Tambah driver jika belum ada
+    [gp.pemenang, ...(gp.podium||[])].forEach(driverName => {
+      if (driverName && !drivers.find(d => d.nama === driverName)) {
+        drivers.push({nama: driverName, nomor_balap: '', negara: '', team: '', kemenangan: 0, podium: 0, gelar: 0, foto: ''});
+      }
+    });
+  });
+  // Reset statistik
+  drivers.forEach(d => { d.kemenangan = 0; d.podium = 0; });
+  teams.forEach(t => { t.kemenangan = 0; t.podium = 0; });
+  // Helper: cari team dari nama driver
+  function getTeamOfDriver(driverName) {
+    const d = drivers.find(dr => dr.nama === driverName);
+    return d ? d.team : null;
+  }
+  grandsprix.forEach(gp => {
+    // Pemenang (juara 1)
+    const winner = gp.pemenang;
+    const winnerDriver = drivers.find(d => d.nama === winner);
+    if (winnerDriver) winnerDriver.kemenangan++;
+    const winnerTeamName = getTeamOfDriver(winner);
+    if (winnerTeamName && !teams.find(t => t.nama === winnerTeamName)) {
+      teams.push({nama: winnerTeamName, negara: '', logo: '', driver1: '', driver2: '', kemenangan: 0, podium: 0, gelar: 0});
+    }
+    const winnerTeam = teams.find(t => t.nama === winnerTeamName);
+    if (winnerTeam) winnerTeam.kemenangan++;
+    // Podium 1,2,3
+    (gp.podium||[]).slice(0,3).forEach(driverName => {
+      const drv = drivers.find(d => d.nama === driverName);
+      if (drv) drv.podium++;
+      const teamName = getTeamOfDriver(driverName);
+      if (teamName && !teams.find(t => t.nama === teamName)) {
+        teams.push({nama: teamName, negara: '', logo: '', driver1: '', driver2: '', kemenangan: 0, podium: 0, gelar: 0});
+      }
+      const team = teams.find(t => t.nama === teamName);
+      if (team) team.podium++;
+    });
+  });
+  saveAllToLocal();
+  renderDrivers();
+  renderTeams();
+}
+
 function submitGrandPrix(e, idx) {
   e.preventDefault();
   const form = e.target;
   if (!validateForm(form)) {
     return false;
   }
-  // Validate podium selection
-  let podium = Array.from(form.querySelectorAll('input[name=podium]:checked')).map(cb=>cb.value);
-  if (podium.length < 3) {
-    document.getElementById('gp-podium-error').textContent = `Pilih minimal 3 pembalap untuk podium! (${podium.length}/3)`;
+  // Ambil podium dari dropdown
+  const podium = [form.podium1.value, form.podium2.value, form.podium3.value];
+  if (new Set(podium).size < 3 || podium.includes('')) {
+    document.getElementById('gp-podium-error').textContent = `Pilih 3 pembalap berbeda untuk podium!`;
     document.getElementById('gp-podium-error').classList.add('show');
     return false;
   }
   // Pastikan podium[0] = pemenang
   const winner = form.pemenang.value;
   if (podium[0] !== winner) {
-    podium = podium.filter(n => n !== winner);
+    const idxWinner = podium.indexOf(winner);
+    if (idxWinner !== -1) {
+      podium.splice(idxWinner, 1);
     podium.unshift(winner);
+    } else {
+      podium[0] = winner;
+    }
   }
   showFormLoading(form);
   setTimeout(() => {
@@ -1197,6 +1261,7 @@ function submitGrandPrix(e, idx) {
   if (idx === null) grandsprix.push(data);
   else grandsprix[idx] = data;
   saveAllToLocal();
+  updateStatsFromGrandPrix();
     hideFormLoading(form);
     showFormSuccess(form);
     setTimeout(() => {
@@ -1210,6 +1275,7 @@ function deleteGrandPrix(idx) {
   if (confirm('Hapus Grand Prix ini?')) {
     grandsprix.splice(idx,1);
     saveAllToLocal();
+    updateStatsFromGrandPrix();
     renderGrandPrix(document.getElementById('filter-gp-tahun')?.value || null);
     updateGrandPrixYearFilterOptions();
   }
@@ -1353,6 +1419,7 @@ async function loadData() {
     saveAllToLocal();
     console.log('Data diambil dari file JSON dan disimpan ke LocalStorage');
   }
+  updateStatsFromGrandPrix();
   renderDrivers();
   renderTeams();
   renderWDC();
