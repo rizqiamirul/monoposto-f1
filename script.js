@@ -548,29 +548,95 @@ function renderTeams() {
     el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data team.</div>';
     return;
   }
+  // Mapping warna khas team
+  const teamColors = {
+    'McLaren F1 Team': '#ff8700',
+    'Ferrari': '#d40000',
+    'Mercedes': '#00c3e0',
+    'Red Bull Racing': '#1e2247',
+    'Aston Martin': '#00665e',
+    'Williams': '#005aff',
+    'Alpine': '#0051a2',
+    'Haas': '#b6babd',
+    'Kick Sauber': '#00e676',
+    'Racing Bulls': '#2e2d88',
+  };
+  // Mapping logo team
+  const teamLogoMap = {
+    'McLaren F1 Team': 'https://upload.wikimedia.org/wikipedia/en/6/6f/McLaren_Racing_logo.png',
+    'Ferrari': 'https://upload.wikimedia.org/wikipedia/en/d/d2/Scuderia_Ferrari_Logo.png',
+    'Mercedes': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Mercedes-Benz_logo_2010.svg',
+    'Red Bull Racing': 'https://upload.wikimedia.org/wikipedia/en/6/6e/Red_Bull_Racing_logo.png',
+    'Aston Martin': 'https://upload.wikimedia.org/wikipedia/en/6/6b/Aston_Martin_F1_Logo.png',
+    'Williams': 'https://upload.wikimedia.org/wikipedia/en/3/3e/Williams_Grand_Prix_Engineering_logo.png',
+    'Alpine': 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Alpine_F1_Team_Logo.png',
+    'Haas': 'https://upload.wikimedia.org/wikipedia/en/4/4b/Haas_F1_Team_logo.png',
+    'Kick Sauber': 'https://upload.wikimedia.org/wikipedia/commons/2/2e/Stake_F1_Team_Kick_Sauber_logo.png',
+    'Racing Bulls': 'https://upload.wikimedia.org/wikipedia/en/2/2e/Scuderia_AlphaTauri_logo.png',
+  };
+  // Mapping gambar mobil
+  const carImgMap = {
+    'McLaren F1 Team': 'car/2025mclarencarright.jpg',
+    'Ferrari': 'car/2025ferraricarright.jpg',
+    'Mercedes': 'car/2025mercedescarright.jpg',
+    'Red Bull Racing': 'car/2025redbullracingcarright.jpg',
+    'Aston Martin': 'car/2025astonmartincarright.jpg',
+    'Williams': 'car/2025williamscarright.jpg',
+    'Alpine': 'car/2025alpinecarright.jpg',
+    'Haas': 'car/2025haascarright.jpg',
+    'Kick Sauber': 'car/2025kicksaubercarright.jpg',
+    'Racing Bulls': 'car/2025racingbullscarright.jpg',
+  };
   el.innerHTML = teams.map((t, i) => {
-    const flagImg = countryFlagMap[t.negara] ? `<img src="https://flagcdn.com/24x18/${countryFlagMap[t.negara]}.png" style="vertical-align:middle;margin-right:4px;">` : '';
+    const color = teamColors[t.nama] || '#1a237e';
+    const logo = t.logo ? `<img class='team-logo' src='${t.logo}' alt='${t.nama}'>` : '';
+    const carImg = carImgMap[t.nama] ? `<img class='team-car-img' src='${carImgMap[t.nama]}' alt='${t.nama} car'>` : '';
+    const flagImg = countryFlagMap[t.negara] ? `<img class='team-flag' src="https://flagcdn.com/32x24/${countryFlagMap[t.negara]}.png" alt="${t.negara}">` : '';
+    // Ambil data driver dari global drivers
+    function getDriverInfo(name) {
+      if (!name) return {nama: '-', nomor_balap: '', foto: ''};
+      const d = drivers.find(dr => dr.nama === name);
+      return d ? {nama: d.nama, nomor_balap: d.nomor_balap, foto: d.foto} : {nama: name, nomor_balap: '', foto: ''};
+    }
+    const d1 = getDriverInfo(t.driver1);
+    const d2 = getDriverInfo(t.driver2);
     return `
-      <div class="card team-card">
-        <div class="team-photo-wrap">
-          ${t.foto ? `<img class="team-photo" src="${t.foto}" alt="${t.nama}" onerror="this.style.display='none'">` : '<div class="team-photo-placeholder"><i class="team-icon">🏎️</i></div>'}
+      <div class="card team-card team-flex-card" style="border-left:8px solid ${color};">
+        <div class="team-card-header">
+          <div class="team-logo-wrap">${logo}</div>
+          <div class="team-title-wrap">
+            <span class="team-name" style="color:${color}">${t.nama}</span>
+            <span class="team-flag-wrap">${flagImg}</span>
+          </div>
+          <div class="team-car-wrap">${carImg}</div>
         </div>
-        <div class="team-info">
-          <div class="team-name">${t.nama}</div>
-          <div class="team-country">Negara: ${flagImg}${t.negara}</div>
-          <div class="team-drivers">Driver 1: ${t.driver1||'-'}<br>Driver 2: ${t.driver2||'-'}</div>
-          <div class="team-stats">Kemenangan: ${t.kemenangan}, Podium: ${t.podium}, Gelar Konstruktor: ${t.gelar}</div>
-        </div>
-        <div class="team-actions">
-          <button class="crud-action edit" onclick="editTeam(${i})">Edit</button>
-          <button class="crud-action delete" onclick="deleteTeam(${i})">Hapus</button>
+        <div class="team-card-body">
+          <div class="team-drivers-row">
+            <div class="team-driver">
+              ${d1.foto ? `<img class='team-driver-photo' src='${d1.foto}' alt='${d1.nama}'>` : ''}
+              <span class="team-driver-name">${d1.nama}</span> <span class="team-driver-num">${d1.nomor_balap ? '#' + d1.nomor_balap : ''}</span>
+            </div>
+            <div class="team-driver">
+              ${d2.foto ? `<img class='team-driver-photo' src='${d2.foto}' alt='${d2.nama}'>` : ''}
+              <span class="team-driver-name">${d2.nama}</span> <span class="team-driver-num">${d2.nomor_balap ? '#' + d2.nomor_balap : ''}</span>
+            </div>
+          </div>
+          <div class="team-stats-row">
+            <span class="team-stat-badge">Win: ${t.kemenangan||0}</span>
+            <span class="team-stat-badge podium">Podium: ${t.podium||0}</span>
+            <span class="team-stat-badge gelar">Gelar: ${t.gelar||0}</span>
+          </div>
+          <div class="team-actions-row">
+            <button class="crud-action edit" onclick="editTeam(${i})">Edit</button>
+            <button class="crud-action delete" onclick="deleteTeam(${i})">Hapus</button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
 }
 function addTeamForm(editIdx = null, formState = null) {
-  const item = editIdx !== null ? teams[editIdx] : {nama:'', negara:'', driver1:'', driver2:'', kemenangan:0, podium:0, gelar:0, foto:''};
+  const item = editIdx !== null ? teams[editIdx] : {nama:'', negara:'', driver1:'', driver2:'', kemenangan:0, podium:0, gelar:0, foto:'', logo:''};
   showModal(`
     <button class='close-modal' onclick='closeModal()'>&times;</button>
     <h3>${editIdx!==null?'Edit':'Tambah'} Team</h3>
@@ -584,6 +650,12 @@ function addTeamForm(editIdx = null, formState = null) {
         <label class="required">Negara</label>
         <input name="negara" value="${item.negara}" required placeholder="Contoh: United Kingdom">
         <div class="error-message"></div>
+      </div>
+      <div class="form-group">
+        <label>Logo Team (URL)</label>
+        <input name="logo" type="url" value="${item.logo || ''}" placeholder="https://example.com/team-logo.png">
+        <div class="error-message"></div>
+        <small style="color:#666;font-size:0.85rem;">Opsional: Masukkan URL logo team</small>
       </div>
       <div class="form-group">
         <label>Foto Team (URL)</label>
@@ -678,6 +750,7 @@ function submitTeam(e, idx) {
   const data = {
     nama: f.nama.value,
     negara: f.negara.value,
+    logo: f.logo.value || '',
     foto: f.foto.value || '',
     driver1: f.driver1.value,
     driver2: f.driver2.value,
