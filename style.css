@@ -9,14 +9,15 @@ body {
 header {
     background: #1a237e;
     color: #fff;
-    padding: 28px 0 0 0;
+    padding: 32px 0 0 0;
     box-shadow: 0 2px 8px rgba(26,35,126,0.08);
     margin-bottom: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    position: relative;
 }
 header h1 {
     margin: 0 0 8px 0;
@@ -2505,5 +2506,89 @@ nav#main-navbar::-webkit-scrollbar {
   .f1-section h2, .section-title, .main-title:not(.web) {
     font-size: 1.3rem;
     letter-spacing: 0.06em;
+  }
+}
+
+/* ====== HEADER LOGO & TITLE ====== */
+.main-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 40px;
+  min-height: 140px;
+  box-sizing: border-box;
+  position: relative;
+}
+.main-logo {
+  height: 120px;
+  width: auto;
+  opacity: 1;
+  margin-left: 40px;
+  margin-right: 0;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: none;
+  box-shadow: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+  z-index: 2;
+}
+.main-logo:hover {
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 0 24px #ffd60088;
+}
+.main-title.web.web-title {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 2.4rem;
+  font-family: 'Bebas Neue', 'Inter', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 2px 2px 0 #1a237e, 0 2px 8px rgba(0,0,0,0.12);
+  transition: text-shadow 0.3s, color 0.3s;
+  opacity: 0;
+  animation: fadeInTitle 1.1s cubic-bezier(0.23,1.02,0.32,1) 0.1s forwards;
+}
+.main-title.web.web-title:hover {
+  text-shadow: 2px 2px 0 #ffd600, 0 2px 8px #1a237e88, 0 0 8px #fff;
+  color: #ffd600;
+}
+@keyframes fadeInTitle {
+  from { opacity: 0; transform: translateY(32px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.header-accent {
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, #ffd600 0%, #e53935 100%);
+  margin-top: 0;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 8px #1a237e22;
+}
+@media (max-width: 900px) {
+  .main-title-row {
+    gap: 20px;
+    min-height: 90px;
+  }
+  .main-logo {
+    height: 70px;
+    margin-left: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .main-title-row {
+    min-height: 48px;
+    gap: 8px;
+    padding-left: 0;
+  }
+  .main-logo {
+    height: 38px;
+    margin-left: 4px;
+  }
+  .main-title.web.web-title {
+    font-size: 1.1rem;
+    padding-left: 0;
   }
 }
