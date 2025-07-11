@@ -1,6 +1,6 @@
 [
-  { "tahun": 2023, "team": "Red Bull Racing" },
-  { "tahun": 2022, "team": "Red Bull Racing" },
-  { "tahun": 2021, "team": "Mercedes" },
-  { "tahun": 2020, "team": "Mercedes" }
+  { "tahun": 2023, "team": "Red Bull Racing", "foto": "" },
+  { "tahun": 2022, "team": "Red Bull Racing", "foto": "" },
+  { "tahun": 2021, "team": "Mercedes", "foto": "" },
+  { "tahun": 2020, "team": "Mercedes", "foto": "" }
 ] 

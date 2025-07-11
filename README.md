@@ -1,159 +1,68 @@
-# Monoposto Formula One - Enhanced Forms
+# Monoposto Formula One
 
-Aplikasi Formula One dengan form yang telah ditingkatkan untuk memberikan pengalaman pengguna yang lebih baik, interaktif, dan responsif.
+Aplikasi web untuk mengelola data Formula One termasuk drivers, teams, grand prix, dan champions.
 
-## 🚀 Fitur Form yang Ditingkatkan
+## Fitur
 
-### ✨ Desain Modern & Responsif
-- **Layout Grid**: Form menggunakan CSS Grid untuk layout yang lebih terorganisir
-- **Responsive Design**: Menyesuaikan dengan berbagai ukuran layar (desktop, tablet, mobile)
-- **Modern UI**: Gradient backgrounds, rounded corners, dan shadow effects
-- **Dark Mode Support**: Otomatis menyesuaikan dengan preferensi sistem
+- **Drivers Management**: Tambah, edit, hapus data pembalap
+- **Teams Management**: Tambah, edit, hapus data tim
+- **Grand Prix Management**: Tambah, edit, hapus data grand prix dengan filter tahun
+- **World Driver Champions (WDC)**: Kelola juara dunia pembalap dengan foto dan layout yang menarik
+- **World Constructor Champions (WCC)**: Kelola juara dunia konstruktor dengan foto dan layout yang menarik
 
-### 🎨 Animasi & Transisi
-- **Smooth Animations**: Animasi slide-down saat modal muncul
-- **Form Animations**: Field-by-field animation saat form dibuka
-- **Hover Effects**: Efek hover yang responsif pada semua elemen
-- **Loading States**: Animasi loading saat form disubmit
-- **Success Feedback**: Animasi sukses setelah data tersimpan
+## Fitur Foto Champion
 
-### 🔍 Validasi Real-time
-- **Instant Validation**: Validasi langsung saat user mengetik
-- **Visual Feedback**: Indikator visual untuk field yang valid/invalid
-- **Error Messages**: Pesan error yang jelas dan informatif
-- **Success Indicators**: Indikator sukses untuk field yang sudah benar
+Aplikasi sekarang mendukung foto untuk WDC dan WCC dengan layout yang menarik:
 
-### ⌨️ Keyboard Shortcuts
-- **Escape**: Menutup modal
-- **Enter**: Submit form (kecuali di textarea)
-- **Tab Navigation**: Navigasi yang smooth antar field
-- **Auto-focus**: Otomatis focus ke field pertama
+### Cara Menambahkan Foto:
+1. Buka form tambah/edit WDC atau WCC
+2. Masukkan URL foto di field "Foto Driver" atau "Foto Team"
+3. Foto akan ditampilkan sebagai gambar lingkaran dengan border kuning
+4. Layout text akan di-center di bawah foto
 
-### 📱 Mobile Optimizations
-- **Touch-friendly**: Target touch yang lebih besar untuk mobile
-- **Prevent Zoom**: Font size 16px untuk mencegah zoom di iOS
-- **Swipe Gestures**: Support untuk gesture mobile
-- **Responsive Buttons**: Button yang mudah ditekan di mobile
+### Contoh URL Foto yang Bisa Digunakan:
+- **Max Verstappen**: `https://upload.wikimedia.org/wikipedia/commons/8/8a/Max_Verstappen_2017_Malaysia_3.jpg`
+- **Lewis Hamilton**: `https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg`
+- **Charles Leclerc**: `https://upload.wikimedia.org/wikipedia/commons/7/72/Charles_Leclerc_2019_Monaco_2.jpg`
+- **Lando Norris**: `https://upload.wikimedia.org/wikipedia/commons/8/8a/Lando_Norris_2019_Monaco_2.jpg`
+- **Red Bull Racing**: `https://upload.wikimedia.org/wikipedia/en/6/6e/Red_Bull_Racing_logo.png`
+- **Mercedes**: `https://upload.wikimedia.org/wikipedia/commons/6/6e/Mercedes-Benz_logo_2010.svg`
+- **Ferrari**: `https://upload.wikimedia.org/wikipedia/en/d/d2/Scuderia_Ferrari_Logo.png`
+- **McLaren**: `https://upload.wikimedia.org/wikipedia/en/6/6f/McLaren_Racing_logo.png`
 
-### 🎯 Enhanced UX Features
-- **Auto-focus**: Otomatis focus ke input pertama
-- **Placeholder Text**: Placeholder yang informatif
-- **Custom Select**: Dropdown yang lebih menarik
-- **Checkbox Groups**: Group checkbox yang lebih terorganisir
-- **Character Counters**: Counter untuk input text (jika diperlukan)
+### Layout Champion yang Baru:
+- **Tahun**: Ditampilkan besar di atas dengan font Bebas Neue
+- **Foto**: Gambar lingkaran 120px dengan border kuning
+- **Nama**: Font besar dan bold di bawah foto
+- **Team**: Informasi team di bawah nama
+- **Badge**: Badge "World Driver/Constructor Champion" dengan gradient
+- **Actions**: Tombol edit dan hapus di bawah
 
-## 🛠️ Teknologi yang Digunakan
+### Fitur Interaktif:
+- **Hover Effects**: Card akan naik dan membesar saat di-hover
+- **Photo Animation**: Foto akan rotate dan scale saat hover
+- **Color Transitions**: Warna akan berubah saat hover
+- **Responsive Design**: Menyesuaikan dengan ukuran layar
+- **Placeholder Icons**: Icon 🏆 untuk WDC dan 🏁 untuk WCC jika tidak ada foto
 
-### CSS Enhancements
-- **CSS Grid & Flexbox**: Layout yang modern dan fleksibel
-- **CSS Custom Properties**: Variabel CSS untuk konsistensi
-- **CSS Animations**: Animasi yang smooth dan performant
-- **Media Queries**: Responsive design yang komprehensif
-- **Backdrop Filter**: Efek blur pada modal background
+### Catatan:
+- Field foto bersifat opsional
+- Jika URL foto tidak valid, gambar tidak akan ditampilkan dan akan diganti dengan icon
+- Layout responsive untuk mobile dan desktop
+- Animasi smooth untuk semua interaksi
 
-### JavaScript Enhancements
-- **Event Delegation**: Penanganan event yang efisien
-- **Real-time Validation**: Validasi yang responsif
-- **Form State Management**: Manajemen state form yang baik
-- **Keyboard Navigation**: Support keyboard yang lengkap
-- **Loading States**: Feedback visual saat processing
+## Cara Penggunaan
 
-## 📋 Struktur Form
+1. Buka `index.html` di browser
+2. Navigasi ke tab yang diinginkan (Drivers, Teams, Grand Prix, WDC, WCC)
+3. Klik "Tambah" untuk menambah data baru
+4. Klik "Edit" untuk mengubah data yang ada
+5. Klik "Hapus" untuk menghapus data
 
-### Driver Form
-- Nama Driver (required)
-- Nomor Balap (required, 1-99)
-- Negara (required)
-- Team (optional dropdown)
-- Statistik (Kemenangan, Podium, Pole Position)
+## Data Storage
 
-### Team Form
-- Nama Team (required)
-- Negara (required)
-- Driver 1 & 2 (nama dan nomor)
-- Statistik Team
+Data disimpan di localStorage browser dan akan tetap tersimpan sampai di-reset atau cache dibersihkan.
 
-### WDC/WCC Form
-- Tahun (required, 1950-2030)
-- Driver/Team selection (dropdown)
+## Reset Data
 
-### Grand Prix Form
-- Nama GP (required)
-- Tahun (required)
-- Pemenang (dropdown)
-- Podium (checkbox group, minimal 3)
-
-## 🎨 Color Scheme
-
-### Primary Colors
-- **Primary Blue**: `#1a237e`
-- **Accent Yellow**: `#ffd600`
-- **Success Green**: `#4caf50`
-- **Error Red**: `#e53935`
-
-### Background Colors
-- **Light Background**: `#f8f9ff`
-- **White**: `#ffffff`
-- **Dark Mode**: `#1a1a2e`
-
-## 📱 Responsive Breakpoints
-
-- **Desktop**: > 768px
-- **Tablet**: 481px - 768px
-- **Mobile**: < 480px
-
-## 🔧 Browser Support
-
-- **Modern Browsers**: Chrome, Firefox, Safari, Edge
-- **CSS Features**: Grid, Flexbox, Custom Properties
-- **JavaScript**: ES6+ features
-- **Mobile**: iOS Safari, Chrome Mobile
-
-## 🚀 Cara Penggunaan
-
-1. **Buka Aplikasi**: Buka `index.html` di browser
-2. **Pilih Section**: Klik tab untuk section yang diinginkan
-3. **Tambah Data**: Klik tombol "Tambah" untuk membuka form
-4. **Isi Form**: Isi field yang diperlukan dengan validasi real-time
-5. **Submit**: Tekan Enter atau klik tombol submit
-6. **Feedback**: Lihat animasi loading dan success
-
-## 🎯 Fitur Khusus
-
-### Form Validation
-- Validasi real-time saat mengetik
-- Pesan error yang jelas dan informatif
-- Indikator visual untuk field status
-- Validasi custom untuk setiap tipe input
-
-### Accessibility
-- Keyboard navigation yang lengkap
-- Screen reader support
-- Focus indicators yang jelas
-- ARIA labels untuk accessibility
-
-### Performance
-- Lazy loading untuk form components
-- Optimized animations
-- Efficient event handling
-- Minimal reflows dan repaints
-
-## 🔄 Update Log
-
-### v2.0 - Enhanced Forms
-- ✅ Modern form design dengan CSS Grid
-- ✅ Real-time validation
-- ✅ Keyboard shortcuts
-- ✅ Mobile optimizations
-- ✅ Dark mode support
-- ✅ Loading states dan animations
-- ✅ Enhanced accessibility
-- ✅ Responsive design improvements
-
-## 📞 Support
-
-Untuk pertanyaan atau feedback tentang fitur form yang ditingkatkan, silakan buat issue di repository ini.
-
----
-
-**Monoposto Formula One** - Enhanced with modern, interactive, and responsive forms for better user experience! 🏎️✨ 
+Klik tombol "Reset Data" untuk mengembalikan semua data ke kondisi awal dari file JSON. 
