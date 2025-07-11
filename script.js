@@ -413,25 +413,25 @@ function submitDriver(e, idx) {
   }
   showFormLoading(form);
   setTimeout(() => {
-    const f = e.target;
-    const data = {
-      nama: f.nama.value,
-      nomor_balap: f.nomor_balap.value,
-      negara: f.negara.value,
-      team: f.team.value,
+  const f = e.target;
+  const data = {
+    nama: f.nama.value,
+    nomor_balap: f.nomor_balap.value,
+    negara: f.negara.value,
+    team: f.team.value,
       kemenangan: Number(f.kemenangan.value||0),
       podium: Number(f.podium.value||0),
       pole: Number(f.pole.value||0),
       foto: f.foto.value || ''
-    };
-    if (idx === null) drivers.push(data);
-    else drivers[idx] = data;
-    saveAllToLocal();
+  };
+  if (idx === null) drivers.push(data);
+  else drivers[idx] = data;
+  saveAllToLocal();
     hideFormLoading(form);
     showFormSuccess(form);
     setTimeout(() => {
-      closeModal();
-      renderDrivers();
+  closeModal();
+  renderDrivers();
     }, 300);
   }, 500);
 }
@@ -463,8 +463,8 @@ function renderDrivers() {
             <span class="driver-stat-badge pole">Pole: ${d.pole}</span>
           </div>
           <div class="driver-actions">
-            <button class="crud-action edit" onclick="editDriver(${i})">Edit</button>
-            <button class="crud-action delete" onclick="deleteDriver(${i})">Hapus</button>
+          <button class="crud-action edit" onclick="editDriver(${i})">Edit</button>
+          <button class="crud-action delete" onclick="deleteDriver(${i})">Hapus</button>
           </div>
         </div>
       </div>
@@ -479,29 +479,29 @@ function addDriverForm(editIdx = null, prefill = {}) {
     <button class='close-modal' onclick='closeModal()'>&times;</button>
     <h3>${editIdx!==null?'Edit':'Tambah'} Driver</h3>
     <form onsubmit="submitDriver(event,${editIdx!==null?editIdx:'null'})">
-      <div class="form-group">
-        <label class="required">Nama Driver</label>
+        <div class="form-group">
+          <label class="required">Nama Driver</label>
         <input name="nama" value="${item.nama}" required placeholder="Contoh: Oscar Piastri">
-        <div class="error-message"></div>
-      </div>
-      <div class="form-group">
-        <label class="required">Nomor Balap</label>
+          <div class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label class="required">Nomor Balap</label>
         <input name="nomor_balap" type="number" value="${item.nomor_balap}" required placeholder="Contoh: 81" min="1" max="99">
-        <div class="error-message"></div>
-      </div>
-      <div class="form-group">
-        <label class="required">Negara</label>
+          <div class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label class="required">Negara</label>
         <input name="negara" value="${item.negara}" required placeholder="Contoh: Australia">
-        <div class="error-message"></div>
-      </div>
-      <div class="form-group">
-        <label>Team</label>
-        <select name="team">
+          <div class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label>Team</label>
+          <select name="team">
           <option value="">-</option>
           ${teamOptions}
-        </select>
-        <div class="error-message"></div>
-      </div>
+          </select>
+          <div class="error-message"></div>
+        </div>
       <div class="form-group">
         <label>Foto Driver (URL)</label>
         <input name="foto" type="url" value="${item.foto || ''}" placeholder="https://example.com/driver-photo.jpg">
@@ -516,8 +516,8 @@ function addDriverForm(editIdx = null, prefill = {}) {
         <div class="form-group">
           <label>Podium</label>
           <input name="podium" type="number" value="${item.podium||0}" min="0">
-        </div>
-        <div class="form-group">
+      </div>
+      <div class="form-group">
           <label>Pole</label>
           <input name="pole" type="number" value="${item.pole||0}" min="0">
         </div>
@@ -630,47 +630,41 @@ function renderTeams() {
             <button class="crud-action edit" onclick="editTeam(${i})">Edit</button>
             <button class="crud-action delete" onclick="deleteTeam(${i})">Hapus</button>
           </div>
-        </div>
       </div>
+    </div>
     `;
   }).join('');
 }
 function addTeamForm(editIdx = null, formState = null) {
-  const item = editIdx !== null ? teams[editIdx] : {nama:'', negara:'', driver1:'', driver2:'', kemenangan:0, podium:0, gelar:0, foto:'', logo:''};
+  const item = editIdx !== null ? teams[editIdx] : {nama:'', negara:'', driver1:'', driver2:'', kemenangan:0, podium:0, gelar:0, logo:''};
   showModal(`
     <button class='close-modal' onclick='closeModal()'>&times;</button>
     <h3>${editIdx!==null?'Edit':'Tambah'} Team</h3>
     <form onsubmit="submitTeam(event,${editIdx!==null?editIdx:'null'})">
-      <div class="form-group">
-        <label class="required">Nama Team</label>
+        <div class="form-group">
+          <label class="required">Nama Team</label>
         <input name="nama" value="${item.nama}" required placeholder="Contoh: McLaren F1 Team">
-        <div class="error-message"></div>
-      </div>
-      <div class="form-group">
-        <label class="required">Negara</label>
+          <div class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label class="required">Negara</label>
         <input name="negara" value="${item.negara}" required placeholder="Contoh: United Kingdom">
-        <div class="error-message"></div>
-      </div>
+          <div class="error-message"></div>
+        </div>
       <div class="form-group">
         <label>Logo Team (URL)</label>
         <input name="logo" type="url" value="${item.logo || ''}" placeholder="https://example.com/team-logo.png">
-        <div class="error-message"></div>
+            <div class="error-message"></div>
         <small style="color:#666;font-size:0.85rem;">Opsional: Masukkan URL logo team</small>
-      </div>
-      <div class="form-group">
-        <label>Foto Team (URL)</label>
-        <input name="foto" type="url" value="${item.foto || ''}" placeholder="https://example.com/team-photo.jpg">
-        <div class="error-message"></div>
-        <small style="color:#666;font-size:0.85rem;">Opsional: Masukkan URL foto team</small>
-      </div>
-      <div class="form-group">
+          </div>
+          <div class="form-group">
         <label>Driver 1</label>
         <input name="driver1" value="${item.driver1||''}" placeholder="Contoh: Oscar Piastri">
-      </div>
+          </div>
       <div class="form-group">
         <label>Driver 2</label>
         <input name="driver2" value="${item.driver2||''}" placeholder="Contoh: Lando Norris">
-      </div>
+          </div>
       <div class="form-grid">
         <div class="form-group">
           <label>Kemenangan</label>
@@ -680,10 +674,10 @@ function addTeamForm(editIdx = null, formState = null) {
           <label>Podium</label>
           <input name="podium" type="number" value="${item.podium||0}" min="0">
         </div>
-        <div class="form-group">
+      <div class="form-group">
           <label>Gelar Konstruktor</label>
           <input name="gelar" type="number" value="${item.gelar||0}" min="0">
-        </div>
+      </div>
       </div>
       <div class="modal-actions">
         <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
@@ -751,7 +745,6 @@ function submitTeam(e, idx) {
     nama: f.nama.value,
     negara: f.negara.value,
     logo: f.logo.value || '',
-    foto: f.foto.value || '',
     driver1: f.driver1.value,
     driver2: f.driver2.value,
     kemenangan: Number(f.kemenangan.value||0),
@@ -866,25 +859,28 @@ function submitWDC(e, idx) {
   if (!validateForm(form)) {
     return false;
   }
-  showFormLoading(form);
-  setTimeout(() => {
-  const f = e.target;
+  const f = form;
+  let foto = f.foto.value;
+  if (!foto) {
+    // Ambil otomatis dari data drivers
+    const driver = drivers.find(d => d.nama === f.driver.value);
+    if (driver && driver.foto) foto = driver.foto;
+  }
   const data = {
     tahun: Number(f.tahun.value),
     driver: f.driver.value,
     team: f.team.value,
-    foto: f.foto.value || ''
+    foto
   };
   if (idx === null) wdc.push(data);
   else wdc[idx] = data;
   saveAllToLocal();
-    hideFormLoading(form);
-    showFormSuccess(form);
-    setTimeout(() => {
-  closeModal();
-  renderWDC();
-    }, 300);
-  }, 500);
+  hideFormLoading(form);
+  showFormSuccess(form);
+  setTimeout(() => {
+    closeModal();
+    renderWDC();
+  }, 300);
 }
 function editWDC(idx) { addWDCForm(idx); }
 function deleteWDC(idx) {
@@ -966,24 +962,27 @@ function submitWCC(e, idx) {
   if (!validateForm(form)) {
     return false;
   }
-  showFormLoading(form);
-  setTimeout(() => {
-  const f = e.target;
+  const f = form;
+  let foto = f.foto.value;
+  if (!foto) {
+    // Ambil otomatis dari data teams
+    const team = teams.find(t => t.nama === f.team.value);
+    if (team && team.logo) foto = team.logo;
+  }
   const data = {
     tahun: Number(f.tahun.value),
     team: f.team.value,
-    foto: f.foto.value || ''
+    foto
   };
   if (idx === null) wcc.push(data);
   else wcc[idx] = data;
   saveAllToLocal();
-    hideFormLoading(form);
-    showFormSuccess(form);
-    setTimeout(() => {
-  closeModal();
-  renderWCC();
-    }, 300);
-  }, 500);
+  hideFormLoading(form);
+  showFormSuccess(form);
+  setTimeout(() => {
+    closeModal();
+    renderWCC();
+  }, 300);
 }
 function editWCC(idx) { addWCCForm(idx); }
 function deleteWCC(idx) {
@@ -998,33 +997,106 @@ document.getElementById('add-wcc-btn').onclick = () => addWCCForm();
 // --- GRAND PRIX ---
 let grandPrixIndexMap = [];
 function renderGrandPrix(filterTahun = null) {
-  console.log('renderGrandPrix() - grandsprix:', grandsprix);
   const el = document.getElementById('grandsprix-list');
   let data = grandsprix;
   grandPrixIndexMap = [];
   if (filterTahun) {
-    data = grandsprix.map((gp, idx) => ({...gp, _idx: idx})).filter(gp => String(gp.tahun) === String(filterTahun));
-    grandPrixIndexMap = data.map(gp => gp._idx);
+    data = grandsprix.map((gp, idx) => ({gp, idx})).filter(obj => String(obj.gp.tahun) === String(filterTahun));
+    grandPrixIndexMap = data.map(obj => obj.idx);
+    data = data.map(obj => obj.gp);
   } else {
-    data = grandsprix.map((gp, idx) => ({...gp, _idx: idx}));
-    grandPrixIndexMap = data.map(gp => gp._idx);
+    grandPrixIndexMap = grandsprix.map((_, idx) => idx);
   }
   if (!data || data.length === 0) {
     el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data Grand Prix.</div>';
     return;
   }
-  el.innerHTML = data.map((gp, i) => `
-    <div class="card">
-      <div class="card-title"><strong>${gp.nama}</strong></div>
-      <div class="card-detail">
-        Tahun: ${gp.tahun}<br>
-        Pemenang: ${gp.pemenang}<br>
-        Podium: ${gp.podium ? gp.podium : '-'}<br>
-        <button class="crud-action edit" onclick="editGrandPrix(${grandPrixIndexMap[i]})">Edit</button>
-        <button class="crud-action delete" onclick="deleteGrandPrix(${grandPrixIndexMap[i]})">Hapus</button>
+  // Mapping bendera negara GP (manual, contoh)
+  const gpFlagMap = {
+    'Australian Grand Prix': 'au',
+    'Australia Grand Prix': 'au',
+    'Chinese Grand Prix': 'cn',
+    'China Grand Prix': 'cn',
+    'Japanese Grand Prix': 'jp',
+    'Japan Grand Prix': 'jp',
+    'Bahrain Grand Prix': 'bh',
+    'Saudi Arabian Grand Prix': 'sa',
+    'Saudi Arabia Grand Prix': 'sa',
+    'Miami Grand Prix': 'us',
+    'Emilia Romagna Grand Prix': 'it',
+    'Italy Grand Prix': 'it',
+    'Italian Grand Prix': 'it',
+    'Monaco Grand Prix': 'mc',
+    'Spanish Grand Prix': 'es',
+    'Spain Grand Prix': 'es',
+    'Canadian Grand Prix': 'ca',
+    'Canada Grand Prix': 'ca',
+    'Austrian Grand Prix': 'at',
+    'Austria Grand Prix': 'at',
+    'British Grand Prix': 'gb',
+    'United Kingdom Grand Prix': 'gb',
+    'Belgian Grand Prix': 'be',
+    'Belgium Grand Prix': 'be',
+    'Hungarian Grand Prix': 'hu',
+    'Hungary Grand Prix': 'hu',
+    'Dutch Grand Prix': 'nl',
+    'Netherlands Grand Prix': 'nl',
+    'Azerbaijan Grand Prix': 'az',
+    'Singapore Grand Prix': 'sg',
+    'United States Grand Prix': 'us',
+    'USA Grand Prix': 'us',
+    'Mexican Grand Prix': 'mx',
+    'Mexico Grand Prix': 'mx',
+    'Brazilian Grand Prix': 'br',
+    'Brazil Grand Prix': 'br',
+    'Qatar Grand Prix': 'qa',
+    'Abu Dhabi Grand Prix': 'ae',
+    'Las Vegas Grand Prix': 'us',
+  };
+  // Mapping gambar sirkuit (jika ada)
+  const circuitImgMap = {
+    'Miami Grand Prix': 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Miami_GP_Circuit_2022.png',
+    'Monaco Grand Prix': 'https://upload.wikimedia.org/wikipedia/commons/6/6e/Monte_Carlo_Formula_1_track_map.png',
+    // tambahkan sesuai kebutuhan
+  };
+  function getDriverInfo(name) {
+    if (!name) return {nama: '-', foto: ''};
+    const d = drivers.find(dr => dr.nama === name);
+    return d ? {nama: d.nama, foto: d.foto} : {nama: name, foto: ''};
+  }
+  el.innerHTML = data.map((gp, i) => {
+    const flag = gpFlagMap[gp.nama] ? `<img class='gp-flag' src='https://flagcdn.com/32x24/${gpFlagMap[gp.nama]}.png' alt='flag'>` : '';
+    const yearBadge = `<span class='gp-year-badge'>${gp.tahun}</span>`;
+    // const circuitImg = circuitImgMap[gp.nama] ? `<img class='gp-circuit-img' src='${circuitImgMap[gp.nama]}' alt='circuit'>` : '';
+    // Ganti circuitImg dengan hashtag otomatis
+    const hashtag = `<div class='gp-hashtag'>#${gp.nama.toLowerCase().replace(/ grand prix/i,'gp').replace(/\s+/g,'')}</div>`;
+    // Pemenang
+    const winner = getDriverInfo(gp.pemenang);
+    const winnerPhoto = winner.foto ? `<img class='gp-winner-photo' src='${winner.foto}' alt='${winner.nama}'>` : '';
+    // Podium
+    const podium = (gp.podium||[]).slice(0,3).map((name, idx) => {
+      const info = getDriverInfo(name);
+      const emoji = idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉';
+      const photo = info.foto ? `<img class='gp-podium-photo' src='${info.foto}' alt='${info.nama}'>` : '';
+      return `<span class='gp-podium-badge'>${emoji} ${photo}<span>${info.nama}</span></span>`;
+    }).join(' ');
+    return `
+      <div class="card gp-card">
+        <div class="gp-card-header">
+          <div class="gp-header-flag">${flag}</div>
+          <div class="gp-header-title">${gp.nama}</div>
+          <div class="gp-header-year">${yearBadge}</div>
+        </div>
+        ${hashtag}
+        <div class="gp-winner-row">🏆 ${winnerPhoto}<span class='gp-winner-name'>${winner.nama}</span></div>
+        <div class="gp-podium-row">${podium}</div>
+        <div class="gp-actions-row">
+        <button class="crud-action edit" onclick="editGrandPrix(${i})">Edit</button>
+        <button class="crud-action delete" onclick="deleteGrandPrix(${i})">Hapus</button>
       </div>
     </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function updateGrandPrixYearFilterOptions() {
@@ -1093,11 +1165,17 @@ function submitGrandPrix(e, idx) {
     return false;
   }
   // Validate podium selection
-  const podium = Array.from(form.querySelectorAll('input[name=podium]:checked')).map(cb=>cb.value);
+  let podium = Array.from(form.querySelectorAll('input[name=podium]:checked')).map(cb=>cb.value);
   if (podium.length < 3) {
     document.getElementById('gp-podium-error').textContent = `Pilih minimal 3 pembalap untuk podium! (${podium.length}/3)`;
     document.getElementById('gp-podium-error').classList.add('show');
     return false;
+  }
+  // Pastikan podium[0] = pemenang
+  const winner = form.pemenang.value;
+  if (podium[0] !== winner) {
+    podium = podium.filter(n => n !== winner);
+    podium.unshift(winner);
   }
   showFormLoading(form);
   setTimeout(() => {

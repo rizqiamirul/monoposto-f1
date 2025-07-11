@@ -1446,14 +1446,18 @@ nav#main-navbar::-webkit-scrollbar {
   text-align: center;
 }
 
+/* Champion Card Photo Styling */
 .champion-photo img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  object-fit: cover;
   border: 4px solid #ffd600;
-  box-shadow: 0 8px 24px rgba(26,35,126,0.2);
-  transition: all 0.3s ease;
+  object-fit: cover;
+  object-position: center top;
+  box-shadow: 0 4px 24px rgba(26,35,126,0.13);
+  background: #fff;
+  display: block;
+  margin: 0 auto;
 }
 
 .champion-photo img:hover {
@@ -2160,3 +2164,328 @@ nav#main-navbar::-webkit-scrollbar {
     padding: 5px 8px;
   }
 } 
+
+/* Grand Prix Card Layout Modern */
+.gp-card {
+  background: linear-gradient(120deg, #f8faff 60%, #e0e7ff 100%);
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(26,35,126,0.10);
+  margin: 36px auto 40px auto;
+  max-width: 700px;
+  width: 95vw;
+  padding: 0 0 24px 0;
+  overflow: visible;
+  border-left: 6px solid #ffd600;
+}
+.gp-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px 8px 32px;
+  gap: 12px;
+}
+.gp-header-flag {
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+}
+.gp-flag {
+  width: 36px;
+  height: 28px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(26,35,126,0.10);
+}
+.gp-header-title {
+  flex: 1 1 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1a237e;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin: 0 8px;
+}
+.gp-header-year {
+  flex: 0 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.gp-year-badge {
+  background: #ffd600;
+  color: #1a237e;
+  font-weight: 700;
+  border-radius: 16px;
+  padding: 7px 18px;
+  font-size: 1.01rem;
+  box-shadow: 0 1px 4px rgba(26,35,126,0.06);
+  border: 1.5px solid #ffd600;
+}
+.gp-circuit-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 10px 0;
+}
+.gp-circuit-img {
+  width: 220px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(26,35,126,0.10);
+  background: #fff;
+}
+.gp-winner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin: 10px 32px 0 32px;
+}
+.gp-winner-photo {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 0%;
+  border: 2.5px solid #ffd600;
+  box-shadow: 0 2px 8px rgba(26,35,126,0.10);
+  background: #fff;
+}
+.gp-winner-name {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin-left: 2px;
+}
+.gp-podium-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin: 10px 32px 0 32px;
+  flex-wrap: wrap;
+}
+.gp-podium-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fffbe6;
+  color: #b8860b;
+  border-radius: 16px;
+  padding: 6px 14px;
+  font-size: 1.01rem;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(26,35,126,0.06);
+  border: 1.5px solid #ffe066;
+}
+.gp-podium-badge:nth-child(2) {
+  background: #e3eafc;
+  color: #1a237e;
+  border-color: #ffd600;
+}
+.gp-podium-badge:nth-child(3) {
+  background: #e0f7fa;
+  color: #00796b;
+  border-color: #4dd0e1;
+}
+.gp-podium-photo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 0%;
+  border: 2px solid #ffd600;
+  box-shadow: 0 1px 4px rgba(26,35,126,0.10);
+  background: #fff;
+}
+.gp-actions-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin: 18px 32px 0 32px;
+}
+@media (max-width: 900px) {
+  .gp-card {
+    max-width: 99vw;
+    width: 99vw;
+  }
+  .gp-card-header, .gp-winner-row, .gp-podium-row, .gp-actions-row {
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .gp-circuit-img {
+    width: 120px;
+    height: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .gp-card {
+    padding: 0 0 12px 0;
+  }
+  .gp-card-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 4px 4px 4px;
+    gap: 6px;
+  }
+  .gp-header-title {
+    font-size: 1.01rem;
+  }
+  .gp-circuit-img {
+    width: 80px;
+    height: 22px;
+  }
+  .gp-winner-row, .gp-podium-row, .gp-actions-row {
+    margin-left: 4px;
+    margin-right: 4px;
+    gap: 6px;
+  }
+  .gp-winner-photo {
+    width: 24px;
+    height: 24px;
+  }
+  .gp-podium-photo {
+    width: 18px;
+    height: 18px;
+  }
+  .gp-podium-badge {
+    font-size: 0.92rem;
+    padding: 4px 7px;
+  }
+} 
+
+.gp-hashtag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: #5a6cff;
+  font-weight: 500;
+  margin: 8px 0 16px 0;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #e3eaff 0%, #f5f7ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px 0 rgba(90,108,255,0.07);
+  padding: 4px 18px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  transition: box-shadow 0.2s;
+}
+.gp-hashtag:hover {
+  box-shadow: 0 4px 16px 0 rgba(90,108,255,0.13);
+  background: linear-gradient(90deg, #dbe2ff 0%, #eaf0ff 100%);
+}
+
+/* --- Section Title Modern --- */
+.f1-section h2, .section-title, .main-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', 'Arial Black', Arial, Helvetica, sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #1a237e;
+  margin-bottom: 18px;
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 12px rgba(26,35,126,0.10), 0 1px 0 #fff;
+  position: relative;
+  background: none;
+}
+.f1-section h2::before, .section-title::before, .main-title::before {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .f1-section h2, .section-title, .main-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* --- Centered Add Button --- */
+.add-btn, .crud-btn, .main-btn, button[type="submit"] {
+  background: linear-gradient(90deg, #ffe066 0%, #ffd600 100%);
+  color: #1a237e;
+  font-weight: 700;
+  font-size: 1.08rem;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  margin: 8px auto 18px auto;
+  box-shadow: 0 2px 12px 0 rgba(255,214,0,0.08);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(.4,2,.6,1);
+  outline: none;
+  letter-spacing: 0.2px;
+  display: block;
+}
+.add-btn:hover, .crud-btn:hover, .main-btn:hover, button[type="submit"]:hover {
+  background: linear-gradient(90deg, #fff176 0%, #ffe066 100%);
+  color: #0d1333;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 24px 0 rgba(255,214,0,0.16);
+}
+.add-btn:active, .crud-btn:active, .main-btn:active, button[type="submit"]:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px 0 rgba(255,214,0,0.10);
+}
+
+@media (max-width: 600px) {
+  .f1-section h2, .section-title, .main-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* --- Web Main Title --- */
+.web-title, .main-title.web {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', 'Arial Black', Arial, Helvetica, sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 18px;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-shadow:
+    0 2px 12px rgba(0,0,0,0.18),
+    0 1px 0 #222;
+  background: none;
+}
+
+/* --- Section Title Modern --- */
+.f1-section h2, .section-title, .main-title:not(.web) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', 'Arial Black', Arial, Helvetica, sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #1a237e;
+  margin-bottom: 18px;
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 12px rgba(26,35,126,0.10), 0 1px 0 #fff;
+  position: relative;
+  background: none;
+}
+.f1-section h2::before, .section-title::before, .main-title::before {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .web-title, .main-title.web {
+    font-size: 1.5rem;
+    letter-spacing: 0.07em;
+  }
+  .f1-section h2, .section-title, .main-title:not(.web) {
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+  }
+}
