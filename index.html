@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" sizes="64x64" href="src/mono logo.png">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
 <body>
   <header>
@@ -20,17 +21,25 @@
     <div class="header-accent"></div>
   </header>
   <nav id="main-navbar">
-    <a href="#drivers" id="nav-drivers">Drivers</a>
-    <a href="#teams" id="nav-teams">Teams</a>
-    <a href="#grandsprix" id="nav-grandsprix">Grand Prix</a>
-    <a href="#wdc" id="nav-wdc">World Driver Champions</a>
-    <a href="#wcc" id="nav-wcc">World Constructor Champions</a>
+    <a id="nav-drivers" href="#drivers"><i class="fas fa-user"></i> Drivers</a>
+    <a id="nav-drivers-standings" href="#drivers-standings"><i class="fas fa-list-ol"></i> Drivers Standings</a>
+    <a id="nav-teams" href="#teams"><i class="fas fa-users"></i> Teams</a>
+    <a id="nav-grandsprix" href="#grandsprix"><i class="fas fa-flag-checkered"></i> Grand Prix</a>
+    <a id="nav-wdc" href="#wdc"><i class="fas fa-trophy"></i> World Driver Champions</a>
+    <a id="nav-wcc" href="#wcc"><i class="fas fa-car"></i> World Constructor Champions</a>
   </nav>
   <main>
     <section id="drivers" class="f1-section">
       <h2>Drivers</h2>
       <button id="add-driver-btn" class="crud-btn">Tambah Driver</button>
       <div id="drivers-list"></div>
+    </section>
+    <section id="drivers-standings" class="f1-section">
+      <h2>Drivers Standings</h2>
+      <label for="filter-standings-tahun" class="standings-filter-label">Filter Tahun:</label>
+      <select id="filter-standings-tahun" class="standings-filter-select"></select>
+      <button id="add-standings-btn" class="crud-btn">Tambah Standings</button>
+      <div id="standings-list"></div>
     </section>
     <section id="teams" class="f1-section">
       <h2>Teams</h2>
@@ -41,7 +50,7 @@
       <h2>Grand Prix</h2>
       <button id="add-gp-btn" class="crud-btn">Tambah Grand Prix</button>
       <label class='gp-filter-label' for='filter-gp-tahun'>Filter Tahun Grand Prix</label>
-      <select id="filter-gp-tahun" style="margin:12px 0 16px 0;max-width:180px;"><option value="">Semua Tahun</option></select>
+      <select id="filter-gp-tahun" style="margin:12px 0 16px 0;max-width:180px;"></select>
       <div id="grandsprix-list"></div>
     </section>
     <section id="wdc" class="f1-section">

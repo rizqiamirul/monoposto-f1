@@ -12,12 +12,13 @@ Aplikasi web modern untuk mengelola data Formula One: pembalap, tim, Grand Prix,
 - **Integrasi Otomatis Foto**: Saat menambah WDC/WCC, foto akan otomatis diambil dari data driver/team jika field foto dikosongkan.
 - **Tampilan Modern & Responsif**: Semua kartu dan form didesain modern, interaktif, dan responsif untuk desktop & mobile.
 - **Reset Data**: Kembalikan data ke kondisi awal dari file JSON dengan satu klik.
+- **Drivers Standings**: Rekap klasemen akhir pembalap tiap musim, dengan data point, edit/tambah/hapus, dan sinkronisasi otomatis dengan data driver (kecuali point).
 
 ## Cara Penggunaan
 
 1. **Buka `index.html` di browser** (disarankan Chrome/Edge/Firefox).
 2. Navigasi ke tab fitur: Drivers, Teams, Grand Prix, WDC, WCC.
-3. Klik tombol "Tambah" untuk menambah data baru.
+3. Klik tombol "Tambah" untuk menambah data baru pada setiap fitur, termasuk Drivers Standings.
 4. Klik "Edit" untuk mengubah data, "Hapus" untuk menghapus.
 5. Untuk WDC/WCC, pilih driver/team, foto akan otomatis terisi jika sudah ada di data driver/team.
 6. Gunakan filter tahun di Grand Prix untuk melihat GP per musim.

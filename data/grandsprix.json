@@ -12,5 +12,26 @@
     "tahun": 2024,
     "pemenang": "Lewis Hamilton",
     "podium": ["Lewis Hamilton", "Max Verstappen", "Lando Norris"]
+  },
+  {
+    "nama": "Australian Grand Prix",
+    "lokasi": "Melbourne",
+    "tahun": 2001,
+    "pemenang": "Michael Schumacher",
+    "podium": ["Michael Schumacher", "David Coulthard", "Rubens Barrichello"]
+  },
+  {
+    "nama": "Brazilian Grand Prix",
+    "lokasi": "Interlagos",
+    "tahun": 2001,
+    "pemenang": "Juan Pablo Montoya",
+    "podium": ["Juan Pablo Montoya", "Michael Schumacher", "David Coulthard"]
+  },
+  {
+    "nama": "Japanese Grand Prix",
+    "lokasi": "Suzuka",
+    "tahun": 2001,
+    "pemenang": "Michael Schumacher",
+    "podium": ["Michael Schumacher", "Juan Pablo Montoya", "David Coulthard"]
   }
 ] 

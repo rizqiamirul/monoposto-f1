@@ -6,6 +6,7 @@ let wdcIndexMap = [];
 let wcc = [];
 let wccIndexMap = [];
 let grandsprix = [];
+let driversStandings = [];
 
 // Mapping negara ke kode bendera (ISO 3166-1 alpha-2)
 const countryFlagMap = {
@@ -59,8 +60,10 @@ function saveAllToLocal() {
   localStorage.setItem('f1_grandsprix', JSON.stringify(grandsprix));
   localStorage.setItem('f1_wdc', JSON.stringify(wdc));
   localStorage.setItem('f1_wcc', JSON.stringify(wcc));
+  localStorage.setItem('f1_drivers_standings', JSON.stringify(driversStandings));
   console.log('Data drivers disimpan:', drivers);
   console.log('Data teams disimpan:', teams);
+  console.log('Data standings disimpan:', driversStandings);
 }
 function loadAllFromLocal() {
   drivers = JSON.parse(localStorage.getItem('f1_drivers')||'null') || [];
@@ -68,8 +71,10 @@ function loadAllFromLocal() {
   grandsprix = JSON.parse(localStorage.getItem('f1_grandsprix')||'null') || [];
   wdc = JSON.parse(localStorage.getItem('f1_wdc')||'null') || [];
   wcc = JSON.parse(localStorage.getItem('f1_wcc')||'null') || [];
+  driversStandings = JSON.parse(localStorage.getItem('f1_drivers_standings')||'null') || [];
   console.log('loadAllFromLocal() - drivers:', drivers);
   console.log('loadAllFromLocal() - teams:', teams);
+  console.log('loadAllFromLocal() - standings:', driversStandings);
 }
 
 // --- MODAL HANDLER ---
@@ -415,25 +420,23 @@ function submitDriver(e, idx) {
   }
   showFormLoading(form);
   setTimeout(() => {
-  const f = e.target;
-  const data = {
-    nama: f.nama.value,
-    nomor_balap: f.nomor_balap.value,
-    negara: f.negara.value,
-    team: f.team.value,
-      kemenangan: Number(f.kemenangan.value||0),
-      podium: Number(f.podium.value||0),
+    const f = e.target;
+    const data = {
+      nama: f.nama.value,
+      nomor_balap: f.nomor_balap.value,
+      negara: f.negara.value,
+      team: f.team.value,
       gelar: Number(f.gelar.value||0),
       foto: f.foto.value || ''
-  };
-  if (idx === null) drivers.push(data);
-  else drivers[idx] = data;
-  saveAllToLocal();
+    };
+    if (idx === null) drivers.push(data);
+    else drivers[idx] = data;
+    saveAllToLocal();
     hideFormLoading(form);
     showFormSuccess(form);
     setTimeout(() => {
-  closeModal();
-  renderDrivers();
+      closeModal();
+      renderDrivers();
     }, 300);
   }, 500);
 }
@@ -460,9 +463,9 @@ function renderDrivers() {
           </div>
           <div class="driver-team">${d.team ? `<span>${d.team}</span>` : '-'}</div>
           <div class="driver-stats">
-            <span class="driver-stat-badge">Win: ${d.kemenangan}</span>
-            <span class="driver-stat-badge podium">Podium: ${d.podium}</span>
-            <span class="driver-stat-badge gelar">Gelar: ${d.gelar||0}</span>
+            <span class="driver-stat-badge">Win: ${typeof d.kemenangan === 'number' ? d.kemenangan : 0}</span>
+            <span class="driver-stat-badge podium">Podium: ${typeof d.podium === 'number' ? d.podium : 0}</span>
+            <span class="driver-stat-badge gelar">WDC: ${d.gelar||0}</span>
           </div>
           <div class="driver-actions">
           <button class="crud-action edit" onclick="editDriver(${i})">Edit</button>
@@ -585,6 +588,10 @@ function renderTeams() {
     }
     const d1 = getDriverInfo(t.driver1);
     const d2 = getDriverInfo(t.driver2);
+    // Ambil statistik dari field langsung atau nested
+    const win = t.kemenangan != null ? t.kemenangan : (t.statistik && t.statistik.kemenangan != null ? t.statistik.kemenangan : 0);
+    const podium = t.podium != null ? t.podium : (t.statistik && t.statistik.podium != null ? t.statistik.podium : 0);
+    const gelar = t.gelar != null ? t.gelar : (t.statistik && t.statistik.gelar_konstruktor != null ? t.statistik.gelar_konstruktor : 0);
     return `
       <div class="card team-card team-flex-card" style="border-left:8px solid ${color};">
         <div class="team-card-header">
@@ -607,9 +614,9 @@ function renderTeams() {
             </div>
           </div>
           <div class="team-stats-row">
-            <span class="team-stat-badge">Win: ${t.kemenangan||0}</span>
-            <span class="team-stat-badge podium">Podium: ${t.podium||0}</span>
-            <span class="team-stat-badge gelar">Gelar: ${t.gelar||0}</span>
+            <span class="team-stat-badge">Win: ${win}</span>
+            <span class="team-stat-badge podium">Podium: ${podium}</span>
+            <span class="team-stat-badge gelar">WCC: ${gelar}</span>
           </div>
           <div class="team-actions-row">
             <button class="crud-action edit" onclick="editTeam(${i})">Edit</button>
@@ -654,6 +661,14 @@ function addTeamForm(editIdx = null, formState = null) {
       <div class="form-group">
           <label>Gelar Konstruktor</label>
           <input name="gelar" type="number" value="${item.gelar||0}" min="0">
+      </div>
+      <div class="form-group">
+        <label>Kemenangan</label>
+        <input name="kemenangan" type="number" value="${item.kemenangan||0}" min="0">
+      </div>
+      <div class="form-group">
+        <label>Podium</label>
+        <input name="podium" type="number" value="${item.podium||0}" min="0">
       </div>
       </div>
       <div class="modal-actions">
@@ -709,39 +724,42 @@ function submitInlineDriverTeam(e, stateStr) {
 function submitTeam(e, idx) {
   e.preventDefault();
   const form = e.target;
-  
-  if (!validateForm(form)) {
-    return false;
-  }
-  
-  showFormLoading(form);
-  
-  setTimeout(() => {
-  const f = e.target;
-  const data = {
-    nama: f.nama.value,
-    negara: f.negara.value,
-    logo: f.logo.value || '',
-    driver1: f.driver1.value,
-    driver2: f.driver2.value,
-    kemenangan: Number(f.kemenangan.value||0),
-    podium: Number(f.podium.value||0),
-    gelar: Number(f.gelar.value||0)
-  };
-    
-  if (idx === null) teams.push(data);
-  else teams[idx] = data;
-    
-  saveAllToLocal();
+  try {
+    if (!validateForm(form)) {
+      hideFormLoading(form);
+      return false;
+    }
+    showFormLoading(form);
+    // Proses langsung tanpa delay
+    const f = e.target;
+    const data = {
+      nama: f.nama.value,
+      negara: f.negara.value,
+      logo: f.logo.value || '',
+      driver1: f.driver1.value,
+      driver2: f.driver2.value,
+      kemenangan: Number(f.kemenangan.value||0),
+      podium: Number(f.podium.value||0),
+      gelar: Number(f.gelar.value||0)
+    };
+    if (!data.nama || !data.negara) {
+      alert('Nama dan Negara wajib diisi!');
+      hideFormLoading(form);
+      return false;
+    }
+    if (idx === null) teams.push(data);
+    else teams[idx] = data;
+    saveAllToLocal();
     hideFormLoading(form);
     showFormSuccess(form);
-    
-    setTimeout(() => {
-  closeModal();
-  renderTeams();
-      renderDrivers(); // pastikan driver juga update
-    }, 300);
-  }, 500);
+    closeModal();
+    renderTeams();
+    renderDrivers(); // pastikan driver juga update
+  } catch (err) {
+    hideFormLoading(form);
+    alert('Terjadi error saat menyimpan data team: ' + err);
+    console.error('Error submitTeam:', err);
+  }
 }
 function editTeam(idx) { addTeamForm(idx); }
 function deleteTeam(idx) {
@@ -855,19 +873,25 @@ function submitWDC(e, idx) {
   if (idx === null) wdc.push(data);
   else wdc[idx] = data;
   saveAllToLocal();
-    hideFormLoading(form);
-    showFormSuccess(form);
-    setTimeout(() => {
-  closeModal();
-  renderWDC();
-    }, 300);
+  hideFormLoading(form);
+  showFormSuccess(form);
+  updateGelarFromWDCWCC();
+  setTimeout(() => {
+    closeModal();
+    renderWDC();
+    renderDrivers();
+    renderTeams();
+  }, 300);
 }
 function editWDC(idx) { addWDCForm(idx); }
 function deleteWDC(idx) {
   if (confirm('Hapus data ini?')) {
     wdc.splice(idx,1);
     saveAllToLocal();
+    updateGelarFromWDCWCC();
     renderWDC();
+    renderDrivers();
+    renderTeams();
   }
 }
 document.getElementById('add-wdc-btn').onclick = () => addWDCForm();
@@ -960,19 +984,23 @@ function submitWCC(e, idx) {
   if (idx === null) wcc.push(data);
   else wcc[idx] = data;
   saveAllToLocal();
-    hideFormLoading(form);
-    showFormSuccess(form);
-    setTimeout(() => {
-  closeModal();
-  renderWCC();
-    }, 300);
+  hideFormLoading(form);
+  showFormSuccess(form);
+  updateGelarFromWDCWCC();
+  setTimeout(() => {
+    closeModal();
+    renderWCC();
+    renderTeams();
+  }, 300);
 }
 function editWCC(idx) { addWCCForm(idx); }
 function deleteWCC(idx) {
   if (confirm('Hapus data ini?')) {
     wcc.splice(idx,1);
     saveAllToLocal();
+    updateGelarFromWDCWCC();
     renderWCC();
+    renderTeams();
   }
 }
 document.getElementById('add-wcc-btn').onclick = () => addWCCForm();
@@ -981,9 +1009,15 @@ document.getElementById('add-wcc-btn').onclick = () => addWCCForm();
 let grandPrixIndexMap = [];
 function renderGrandPrix(filterTahun = null) {
   const el = document.getElementById('grandsprix-list');
+  // Jika filter tahun kosong, tampilkan pesan saja
+  if (!filterTahun || filterTahun === "") {
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Pilih tahun untuk melihat Grand Prix.</div>';
+    grandPrixIndexMap = [];
+    return;
+  }
   let data = grandsprix;
   grandPrixIndexMap = [];
-  if (filterTahun) {
+  if (filterTahun && filterTahun !== '') {
     data = grandsprix.map((gp, idx) => ({gp, idx})).filter(obj => String(obj.gp.tahun) === String(filterTahun));
     grandPrixIndexMap = data.map(obj => obj.idx);
     data = data.map(obj => obj.gp);
@@ -1027,7 +1061,7 @@ function renderGrandPrix(filterTahun = null) {
     'Azerbaijan Grand Prix': 'az',
     'Singapore Grand Prix': 'sg',
     'United States Grand Prix': 'us',
-    'USA Grand Prix': 'us',
+    'Americas Grand Prix': 'us',
     'Mexican Grand Prix': 'mx',
     'Mexico Grand Prix': 'mx',
     'Brazilian Grand Prix': 'br',
@@ -1103,7 +1137,7 @@ function updateGrandPrixYearFilterOptions() {
   // Ambil semua tahun unik dari grandsprix
   const tahunSet = new Set(grandsprix.map(gp => gp.tahun));
   const tahunArr = Array.from(tahunSet).sort((a,b)=>b-a);
-  select.innerHTML = '<option value="">Semua Tahun</option>' + tahunArr.map(t => `<option value="${t}">${t}</option>`).join('');
+  select.innerHTML = '<option value="">Pilih Tahun</option>' + tahunArr.map(t => `<option value="${t}">${t}</option>`).join('');
 }
 
 function addGrandPrixForm(editIdx = null) {
@@ -1180,9 +1214,8 @@ function addGrandPrixForm(editIdx = null) {
 
 // Update statistik driver dan team dari data Grand Prix
 function updateStatsFromGrandPrix() {
-  // Pastikan semua driver/tim yang muncul di Grand Prix ada di drivers/teams
+  // Pastikan semua driver yang muncul di Grand Prix ada di drivers
   grandsprix.forEach(gp => {
-    // Tambah driver jika belum ada
     [gp.pemenang, ...(gp.podium||[])].forEach(driverName => {
       if (driverName && !drivers.find(d => d.nama === driverName)) {
         drivers.push({nama: driverName, nomor_balap: '', negara: '', team: '', kemenangan: 0, podium: 0, gelar: 0, foto: ''});
@@ -1191,11 +1224,24 @@ function updateStatsFromGrandPrix() {
   });
   // Reset statistik
   drivers.forEach(d => { d.kemenangan = 0; d.podium = 0; });
-  teams.forEach(t => { t.kemenangan = 0; t.podium = 0; });
+  teams.forEach(t => {
+    t.kemenangan = 0; t.podium = 0; t.gelar = t.gelar || 0;
+    if (t.statistik) {
+      t.statistik.kemenangan = 0;
+      t.statistik.podium = 0;
+      t.statistik.gelar_konstruktor = t.statistik.gelar_konstruktor || 0;
+    }
+  });
   // Helper: cari team dari nama driver
   function getTeamOfDriver(driverName) {
     const d = drivers.find(dr => dr.nama === driverName);
     return d ? d.team : null;
+  }
+  // Helper: cari team dengan nama toleran
+  function findTeamByName(name) {
+    if (!name) return null;
+    const norm = n => n.toLowerCase().trim();
+    return teams.find(t => norm(t.nama) === norm(name));
   }
   grandsprix.forEach(gp => {
     // Pemenang (juara 1)
@@ -1203,26 +1249,48 @@ function updateStatsFromGrandPrix() {
     const winnerDriver = drivers.find(d => d.nama === winner);
     if (winnerDriver) winnerDriver.kemenangan++;
     const winnerTeamName = getTeamOfDriver(winner);
-    if (winnerTeamName && !teams.find(t => t.nama === winnerTeamName)) {
-      teams.push({nama: winnerTeamName, negara: '', logo: '', driver1: '', driver2: '', kemenangan: 0, podium: 0, gelar: 0});
-    }
-    const winnerTeam = teams.find(t => t.nama === winnerTeamName);
-    if (winnerTeam) winnerTeam.kemenangan++;
+    const winnerTeam = findTeamByName(winnerTeamName);
+    if (winnerTeam) {
+      winnerTeam.kemenangan++;
+      if (winnerTeam.statistik) winnerTeam.statistik.kemenangan++;
+    } else if (winnerTeamName) console.warn('Team tidak ditemukan untuk pemenang:', winnerTeamName);
     // Podium 1,2,3
     (gp.podium||[]).slice(0,3).forEach(driverName => {
       const drv = drivers.find(d => d.nama === driverName);
       if (drv) drv.podium++;
       const teamName = getTeamOfDriver(driverName);
-      if (teamName && !teams.find(t => t.nama === teamName)) {
-        teams.push({nama: teamName, negara: '', logo: '', driver1: '', driver2: '', kemenangan: 0, podium: 0, gelar: 0});
-      }
-      const team = teams.find(t => t.nama === teamName);
-      if (team) team.podium++;
+      const team = findTeamByName(teamName);
+      if (team) {
+        team.podium++;
+        if (team.statistik) team.statistik.podium++;
+      } else if (teamName) console.warn('Team tidak ditemukan untuk podium:', teamName);
     });
   });
   saveAllToLocal();
   renderDrivers();
   renderTeams();
+  updateGelarFromWDCWCC();
+}
+
+function updateGelarFromWDCWCC() {
+  // Reset gelar pada drivers dan teams
+  drivers.forEach(d => { d.gelar = 0; });
+  teams.forEach(t => { t.gelar = 0; if (t.statistik) t.statistik.gelar_konstruktor = 0; });
+  // Tambah gelar dari WDC
+  wdc.forEach(w => {
+    const driver = drivers.find(d => d.nama === w.driver);
+    if (driver) driver.gelar = (driver.gelar || 0) + 1;
+  });
+  // Tambah gelar dari WCC
+  wcc.forEach(w => {
+    // Cari team dengan nama toleran
+    const norm = n => n.toLowerCase().trim();
+    const team = teams.find(t => norm(t.nama) === norm(w.team));
+    if (team) {
+      team.gelar = (team.gelar || 0) + 1;
+      if (team.statistik) team.statistik.gelar_konstruktor = (team.statistik.gelar_konstruktor || 0) + 1;
+    }
+  });
 }
 
 function submitGrandPrix(e, idx) {
@@ -1266,25 +1334,235 @@ function submitGrandPrix(e, idx) {
     showFormSuccess(form);
     setTimeout(() => {
   closeModal();
-  renderGrandPrix();
+  // Re-render dengan filter yang sedang aktif
+  const currentFilter = document.getElementById('filter-gp-tahun')?.value || '';
+  renderGrandPrix(currentFilter);
+  updateGrandPrixYearFilterOptions();
     }, 300);
   }, 500);
 }
-function editGrandPrix(idx) { addGrandPrixForm(idx); }
-function deleteGrandPrix(idx) {
+function editGrandPrix(idx) { 
+  addGrandPrixForm(idx); 
+}
+
+function editGrandPrixFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-gp-tahun')?.value || '';
+  let filtered = grandsprix;
+  if (tahunFilter && tahunFilter !== '') {
+    filtered = grandsprix.filter(gp => String(gp.tahun) === String(tahunFilter));
+  }
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  
+  // Cari index asli di array utama
+  const idx = grandsprix.findIndex(gp => gp.nama === entry.nama && String(gp.tahun) === String(entry.tahun));
+  if (idx !== -1) {
+    addGrandPrixForm(idx);
+  }
+}
+
+function deleteGrandPrix(idx) { 
   if (confirm('Hapus Grand Prix ini?')) {
     grandsprix.splice(idx,1);
     saveAllToLocal();
     updateStatsFromGrandPrix();
-    renderGrandPrix(document.getElementById('filter-gp-tahun')?.value || null);
+    renderGrandPrix();
     updateGrandPrixYearFilterOptions();
+  }
+}
+
+function deleteGrandPrixFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-gp-tahun')?.value || '';
+  let filtered = grandsprix;
+  if (tahunFilter && tahunFilter !== '') {
+    filtered = grandsprix.filter(gp => String(gp.tahun) === String(tahunFilter));
+  }
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  
+  if (confirm('Hapus Grand Prix ini?')) {
+    // Cari index asli di array utama
+    const idx = grandsprix.findIndex(gp => gp.nama === entry.nama && String(gp.tahun) === String(entry.tahun));
+    if (idx !== -1) {
+      grandsprix.splice(idx, 1);
+      saveAllToLocal();
+      updateStatsFromGrandPrix();
+      // Re-render dengan filter yang sedang aktif
+      renderGrandPrix(tahunFilter);
+      updateGrandPrixYearFilterOptions();
+    }
   }
 }
 document.getElementById('add-gp-btn').onclick = () => addGrandPrixForm();
 
+// --- CRUD STANDINGS ---
+function renderDriversStandings() {
+  const el = document.getElementById('standings-list');
+  if (!driversStandings || driversStandings.length === 0) {
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data standings.</div>';
+    updateStandingsYearFilter();
+    return;
+  }
+  // Ambil tahun filter (wajib pilih tahun)
+  updateStandingsYearFilter();
+  const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
+  if (!tahunFilter) {
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Pilih tahun untuk melihat standings.</div>';
+    return;
+  }
+  // Filter data
+  let filtered = driversStandings.filter(s => String(s.tahun) === String(tahunFilter));
+  // Urutkan berdasarkan point menurun
+  const sorted = [...filtered].sort((a, b) => b.point - a.point);
+  el.innerHTML = sorted.map((s, i) => {
+    // Ambil data driver dari drivers
+    const d = drivers.find(dr => dr.nama === s.nama) || {};
+    const nama = d.nama || s.nama;
+    const nomor_balap = d.nomor_balap || s.nomor_balap || '';
+    const negara = d.negara || s.negara || '';
+    const team = d.team || s.team || '';
+    const foto = d.foto || s.foto || '';
+    const flagImg = countryFlagMap[negara] ? `<img class='driver-flag-inline' src=\"https://flagcdn.com/40x30/${countryFlagMap[negara]}.png\" alt=\"${negara}\">` : '';
+    // Badge tahun
+    const tahunBadge = s.tahun ? `<span class='standings-tahun-badge'>${s.tahun}</span>` : '';
+    return `
+      <div class=\"card driver-card driver-flex-card\">
+        <div class=\"driver-photo-col\">
+          <div class=\"driver-photo-wrap\">
+            ${foto ? `<img class=\"driver-photo\" src=\"${foto}\" alt=\"${nama}\" onerror=\"this.style.display='none'\">` : '<div class=\"driver-photo-placeholder\"><i class=\"driver-icon\">🏁</i></div>'}
+          </div>
+        </div>
+        <div class=\"driver-info-col\">
+          <div class=\"driver-name-row\">
+            ${flagImg}
+            <span class=\"driver-name\">${nama}</span> <span class=\"driver-num\">#${nomor_balap}</span> ${tahunBadge}
+          </div>
+          <div class=\"driver-team\">${team ? `<span>${team}</span>` : '-'}</div>
+          <div class=\"driver-standings-point-row\">
+            <span class=\"standings-point-badge\">
+              <i class=\"fas fa-trophy\"></i>
+              <span class=\"standings-point-value\">${s.point||0}</span>
+              <span class=\"standings-point-label\">POINTS</span>
+            </span>
+          </div>
+          <div class=\"driver-actions\">
+          <button class=\"crud-action edit\" onclick=\"editStandingsFiltered(${i})\">Edit</button>
+          <button class=\"crud-action delete\" onclick=\"deleteStandingsFiltered(${i})\">Hapus</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+function addStandingsForm(editIdx = null, prefill = {}) {
+  const item = editIdx !== null ? driversStandings[editIdx] : {nama:'', point:0, tahun:''};
+  const driverOptions = drivers.map(d => `<option value="${d.nama}"${item.nama===d.nama?' selected':''}>${d.nama} #${d.nomor_balap||''}</option>`).join('');
+  // Tahun: jika edit, pakai tahun data, jika tambah, default tahun terbaru di data atau tahun sekarang
+  let tahunDefault = item.tahun || (driversStandings.length > 0 ? (Math.max(...driversStandings.map(s=>Number(s.tahun)||0))||new Date().getFullYear()) : new Date().getFullYear());
+  showModal(`
+    <button class='close-modal' onclick='closeModal()'>&times;</button>
+    <h3>${editIdx!==null?'Edit':'Tambah'} Standings</h3>
+    <form id="standings-form" onsubmit="submitStandings(event,${editIdx!==null?editIdx:'null'})">
+      <div class="form-group">
+        <label class="required">Tahun</label>
+        <input name="tahun" type="number" min="1950" max="2100" value="${tahunDefault}" required placeholder="Contoh: 2025">
+        <div class="error-message"></div>
+      </div>
+      <div class="form-group">
+        <label class="required">Nama</label>
+        <select name="nama" id="standings-nama" required>
+          <option value="">Pilih Driver</option>
+          ${driverOptions}
+        </select>
+        <div class="error-message"></div>
+      </div>
+      <div class="form-group">
+        <label class="required">Point</label>
+        <input name="point" type="number" value="${item.point||0}" min="0" required>
+        <div class="error-message"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
+        <button type="submit" class="crud-btn">${editIdx!==null?'Update':'Simpan'} Standings</button>
+      </div>
+    </form>
+  `);
+}
+// --- Filtering & Render Standings ---
+function updateStandingsYearFilter() {
+  const select = document.getElementById('filter-standings-tahun');
+  if (!select) return;
+  const tahunList = Array.from(new Set(driversStandings.map(s => s.tahun).filter(Boolean))).sort((a,b)=>b-a);
+  const current = select.value;
+  select.innerHTML = tahunList.map(t => `<option value="${t}">${t}</option>`).join('');
+  // Pilih tahun terbaru jika belum ada yang dipilih
+  if (!tahunList.includes(current)) {
+    select.value = tahunList[0] || '';
+  } else {
+    select.value = current;
+  }
+}
+// Event listener filter tahun
+const filterTahunSelect = document.getElementById('filter-standings-tahun');
+if (filterTahunSelect) {
+  filterTahunSelect.addEventListener('change', renderDriversStandings);
+}
+function submitStandings(e, idx) {
+  e.preventDefault();
+  const form = e.target;
+  if (!validateForm(form)) {
+    return false;
+  }
+  showFormLoading(form);
+  const f = e.target;
+  const data = {
+    nama: f.nama.value,
+    point: Number(f.point.value||0),
+    tahun: f.tahun.value
+  };
+  if (idx === null) driversStandings.push(data);
+  else driversStandings[idx] = data;
+  saveAllToLocal();
+  hideFormLoading(form);
+  showFormSuccess(form);
+  closeModal();
+  renderDriversStandings();
+}
+function editStandingsFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
+  let filtered = driversStandings;
+  if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
+  filtered = [...filtered].sort((a, b) => b.point - a.point);
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  // Cari index asli di array utama
+  const idx = driversStandings.findIndex(s => s.nama === entry.nama && String(s.tahun) === String(entry.tahun));
+  if (idx !== -1) addStandingsForm(idx);
+}
+// Fungsi hapus/edit berdasarkan index data yang sudah difilter
+function deleteStandingsFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
+  let filtered = driversStandings;
+  if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
+  // Urutkan sama seperti render
+  filtered = [...filtered].sort((a, b) => b.point - a.point);
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  if (confirm('Hapus standings ini?')) {
+    // Cari index asli di array utama
+    const idx = driversStandings.findIndex(s => s.nama === entry.nama && String(s.tahun) === String(entry.tahun));
+    if (idx !== -1) {
+      driversStandings.splice(idx,1);
+      saveAllToLocal();
+      renderDriversStandings();
+    }
+  }
+}
+
 // --- NAVBAR SECTION SWITCHER ---
 const navLinks = [
   {id: 'nav-drivers', section: 'drivers'},
+  {id: 'nav-drivers-standings', section: 'drivers-standings'},
   {id: 'nav-teams', section: 'teams'},
   {id: 'nav-grandsprix', section: 'grandsprix'},
   {id: 'nav-wdc', section: 'wdc'},
@@ -1354,10 +1632,20 @@ function setupCrudDelegation() {
   document.getElementById('grandsprix-list').onclick = function(e) {
     if (e.target.classList.contains('edit')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      editGrandPrix(grandPrixIndexMap[idx]);
+      editGrandPrixFiltered(idx);
     } else if (e.target.classList.contains('delete')) {
       const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
-      deleteGrandPrix(grandPrixIndexMap[idx]);
+      deleteGrandPrixFiltered(idx);
+    }
+  };
+  // STANDINGS
+  document.getElementById('standings-list').onclick = function(e) {
+    if (e.target.classList.contains('edit')) {
+      const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
+      editStandingsFiltered(idx);
+    } else if (e.target.classList.contains('delete')) {
+      const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
+      deleteStandingsFiltered(idx);
     }
   };
 }
@@ -1405,7 +1693,7 @@ if (resetBtn) {
 async function loadData() {
   // Cek apakah LocalStorage sudah ada data
   // Jika tidak ada, ambil dari file JSON dan simpan ke LocalStorage
-  const hasLocal = localStorage.getItem('f1_drivers') || localStorage.getItem('f1_teams') || localStorage.getItem('f1_grandsprix') || localStorage.getItem('f1_wdc') || localStorage.getItem('f1_wcc');
+  const hasLocal = localStorage.getItem('f1_drivers') || localStorage.getItem('f1_teams') || localStorage.getItem('f1_grandsprix') || localStorage.getItem('f1_wdc') || localStorage.getItem('f1_wcc') || localStorage.getItem('f1_drivers_standings');
   if (hasLocal) {
     loadAllFromLocal();
     console.log('Data diambil dari LocalStorage:', localStorage.getItem('f1_drivers'));
@@ -1416,6 +1704,7 @@ async function loadData() {
     wdc = await (await fetch('data/wdc.json')).json();
     wcc = await (await fetch('data/wcc.json')).json();
     grandsprix = await (await fetch('data/grandsprix.json')).json();
+    driversStandings = await (await fetch('data/standings.json')).json();
     saveAllToLocal();
     console.log('Data diambil dari file JSON dan disimpan ke LocalStorage');
   }
@@ -1424,8 +1713,10 @@ async function loadData() {
   renderTeams();
   renderWDC();
   renderWCC();
-  renderGrandPrix();
+  renderGrandPrix(null);
+  renderDriversStandings();
   updateGrandPrixYearFilterOptions && updateGrandPrixYearFilterOptions();
+  updateGelarFromWDCWCC();
 }
 document.addEventListener('DOMContentLoaded', () => {
 loadData();
@@ -1437,3 +1728,5 @@ if (tahunSelect) {
   });
 }
 }); 
+
+document.getElementById('add-standings-btn').onclick = () => addStandingsForm();
