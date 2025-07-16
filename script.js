@@ -7,6 +7,7 @@ let wcc = [];
 let wccIndexMap = [];
 let grandsprix = [];
 let driversStandings = [];
+let constructorStandings = [];
 
 // Mapping negara ke kode bendera (ISO 3166-1 alpha-2)
 const countryFlagMap = {
@@ -35,6 +36,7 @@ const countryFlagMap = {
   "Argentina": "ar",
   "Austria": "at",
   "Switzerland": "ch",
+  "South Africa": "za",
   // ... tambahkan sesuai kebutuhan
 };
 
@@ -61,9 +63,11 @@ function saveAllToLocal() {
   localStorage.setItem('f1_wdc', JSON.stringify(wdc));
   localStorage.setItem('f1_wcc', JSON.stringify(wcc));
   localStorage.setItem('f1_drivers_standings', JSON.stringify(driversStandings));
+  localStorage.setItem('f1_constructor_standings', JSON.stringify(constructorStandings));
   console.log('Data drivers disimpan:', drivers);
   console.log('Data teams disimpan:', teams);
   console.log('Data standings disimpan:', driversStandings);
+  console.log('Data constructor standings disimpan:', constructorStandings);
 }
 function loadAllFromLocal() {
   drivers = JSON.parse(localStorage.getItem('f1_drivers')||'null') || [];
@@ -72,9 +76,13 @@ function loadAllFromLocal() {
   wdc = JSON.parse(localStorage.getItem('f1_wdc')||'null') || [];
   wcc = JSON.parse(localStorage.getItem('f1_wcc')||'null') || [];
   driversStandings = JSON.parse(localStorage.getItem('f1_drivers_standings')||'null') || [];
+  constructorStandings = JSON.parse(localStorage.getItem('f1_constructor_standings')||'null') || [];
   console.log('loadAllFromLocal() - drivers:', drivers);
   console.log('loadAllFromLocal() - teams:', teams);
   console.log('loadAllFromLocal() - standings:', driversStandings);
+  console.log('loadAllFromLocal() - constructor standings:', constructorStandings);
+  // Tambahan: render langsung agar data tampil setelah refresh
+  renderConstructorStandings();
 }
 
 // --- MODAL HANDLER ---
@@ -420,23 +428,23 @@ function submitDriver(e, idx) {
   }
   showFormLoading(form);
   setTimeout(() => {
-    const f = e.target;
-    const data = {
-      nama: f.nama.value,
-      nomor_balap: f.nomor_balap.value,
-      negara: f.negara.value,
-      team: f.team.value,
+  const f = e.target;
+  const data = {
+    nama: f.nama.value,
+    nomor_balap: f.nomor_balap.value,
+    negara: f.negara.value,
+    team: f.team.value,
       gelar: Number(f.gelar.value||0),
       foto: f.foto.value || ''
-    };
-    if (idx === null) drivers.push(data);
-    else drivers[idx] = data;
-    saveAllToLocal();
+  };
+  if (idx === null) drivers.push(data);
+  else drivers[idx] = data;
+  saveAllToLocal();
     hideFormLoading(form);
     showFormSuccess(form);
     setTimeout(() => {
-      closeModal();
-      renderDrivers();
+  closeModal();
+  renderDrivers();
     }, 300);
   }, 500);
 }
@@ -725,36 +733,36 @@ function submitTeam(e, idx) {
   e.preventDefault();
   const form = e.target;
   try {
-    if (!validateForm(form)) {
+  if (!validateForm(form)) {
       hideFormLoading(form);
-      return false;
-    }
-    showFormLoading(form);
+    return false;
+  }
+  showFormLoading(form);
     // Proses langsung tanpa delay
-    const f = e.target;
-    const data = {
-      nama: f.nama.value,
-      negara: f.negara.value,
-      logo: f.logo.value || '',
-      driver1: f.driver1.value,
-      driver2: f.driver2.value,
-      kemenangan: Number(f.kemenangan.value||0),
-      podium: Number(f.podium.value||0),
-      gelar: Number(f.gelar.value||0)
-    };
+  const f = e.target;
+  const data = {
+    nama: f.nama.value,
+    negara: f.negara.value,
+    logo: f.logo.value || '',
+    driver1: f.driver1.value,
+    driver2: f.driver2.value,
+    kemenangan: Number(f.kemenangan.value||0),
+    podium: Number(f.podium.value||0),
+    gelar: Number(f.gelar.value||0)
+  };
     if (!data.nama || !data.negara) {
       alert('Nama dan Negara wajib diisi!');
       hideFormLoading(form);
       return false;
     }
-    if (idx === null) teams.push(data);
-    else teams[idx] = data;
-    saveAllToLocal();
+  if (idx === null) teams.push(data);
+  else teams[idx] = data;
+  saveAllToLocal();
     hideFormLoading(form);
     showFormSuccess(form);
-    closeModal();
-    renderTeams();
-    renderDrivers(); // pastikan driver juga update
+  closeModal();
+  renderTeams();
+      renderDrivers(); // pastikan driver juga update
   } catch (err) {
     hideFormLoading(form);
     alert('Terjadi error saat menyimpan data team: ' + err);
@@ -873,15 +881,15 @@ function submitWDC(e, idx) {
   if (idx === null) wdc.push(data);
   else wdc[idx] = data;
   saveAllToLocal();
-  hideFormLoading(form);
-  showFormSuccess(form);
+    hideFormLoading(form);
+    showFormSuccess(form);
   updateGelarFromWDCWCC();
-  setTimeout(() => {
-    closeModal();
-    renderWDC();
+    setTimeout(() => {
+  closeModal();
+  renderWDC();
     renderDrivers();
     renderTeams();
-  }, 300);
+    }, 300);
 }
 function editWDC(idx) { addWDCForm(idx); }
 function deleteWDC(idx) {
@@ -984,14 +992,14 @@ function submitWCC(e, idx) {
   if (idx === null) wcc.push(data);
   else wcc[idx] = data;
   saveAllToLocal();
-  hideFormLoading(form);
-  showFormSuccess(form);
+    hideFormLoading(form);
+    showFormSuccess(form);
   updateGelarFromWDCWCC();
-  setTimeout(() => {
-    closeModal();
-    renderWCC();
+    setTimeout(() => {
+  closeModal();
+  renderWCC();
     renderTeams();
-  }, 300);
+    }, 300);
 }
 function editWCC(idx) { addWCCForm(idx); }
 function deleteWCC(idx) {
@@ -1083,6 +1091,7 @@ function renderGrandPrix(filterTahun = null) {
     'French Grand Prix': 'fr',
     'France Grand Prix': 'fr',
     'Tuscany Grand Prix': 'it',
+    'South African Grand Prix': 'za'
   };
   // Mapping gambar sirkuit (jika ada)
   const circuitImgMap = {
@@ -1361,7 +1370,7 @@ function editGrandPrixFiltered(filteredIdx) {
   }
 }
 
-function deleteGrandPrix(idx) { 
+function deleteGrandPrix(idx) {
   if (confirm('Hapus Grand Prix ini?')) {
     grandsprix.splice(idx,1);
     saveAllToLocal();
@@ -1395,11 +1404,11 @@ function deleteGrandPrixFiltered(filteredIdx) {
 }
 document.getElementById('add-gp-btn').onclick = () => addGrandPrixForm();
 
-// --- CRUD STANDINGS ---
-function renderDriversStandings() {
+// --- CRUD RESULT ---
+function renderResult() {
   const el = document.getElementById('standings-list');
   if (!driversStandings || driversStandings.length === 0) {
-    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data standings.</div>';
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data hasil.</div>';
     updateStandingsYearFilter();
     return;
   }
@@ -1407,7 +1416,7 @@ function renderDriversStandings() {
   updateStandingsYearFilter();
   const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
   if (!tahunFilter) {
-    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Pilih tahun untuk melihat standings.</div>';
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Pilih tahun untuk melihat hasil.</div>';
     return;
   }
   // Filter data
@@ -1422,38 +1431,26 @@ function renderDriversStandings() {
     const negara = d.negara || s.negara || '';
     const team = d.team || s.team || '';
     const foto = d.foto || s.foto || '';
-    const flagImg = countryFlagMap[negara] ? `<img class='driver-flag-inline' src=\"https://flagcdn.com/40x30/${countryFlagMap[negara]}.png\" alt=\"${negara}\">` : '';
-    // Badge tahun
-    const tahunBadge = s.tahun ? `<span class='standings-tahun-badge'>${s.tahun}</span>` : '';
+    const flagImg = countryFlagMap[negara] ? `<img class='driver-standings-flag' src='https://flagcdn.com/32x24/${countryFlagMap[negara]}.png' alt='${negara}'>` : '';
+    const tahunBadge = s.tahun ? `<span class='driver-standings-tahun-badge'>${s.tahun}</span>` : '';
     return `
-      <div class=\"card driver-card driver-flex-card\">
-        <div class=\"driver-photo-col\">
-          <div class=\"driver-photo-wrap\">
-            ${foto ? `<img class=\"driver-photo\" src=\"${foto}\" alt=\"${nama}\" onerror=\"this.style.display='none'\">` : '<div class=\"driver-photo-placeholder\"><i class=\"driver-icon\">🏁</i></div>'}
-          </div>
-        </div>
-        <div class=\"driver-info-col\">
-          <div class=\"driver-name-row\">
+      <div class='card driver-standings-card driver-standings-flex-card'>
+        <div class='driver-standings-photo-col'><img class='driver-standings-photo' src='${foto}' alt='${nama}' onerror="this.style.display='none'"></div>
+        <div class='driver-standings-info-col'>
+          <div class='driver-standings-row'>
             ${flagImg}
-            <span class=\"driver-name\">${nama}</span> <span class=\"driver-num\">#${nomor_balap}</span> ${tahunBadge}
+            <span class='driver-standings-name'>${nama}</span>
+            <span class='driver-standings-num'>#${nomor_balap}</span>
+            ${tahunBadge}
           </div>
-          <div class=\"driver-team\">${team ? `<span>${team}</span>` : '-'}</div>
-          <div class=\"driver-standings-point-row\">
-            <span class=\"standings-point-badge\">
-              <i class=\"fas fa-trophy\"></i>
-              <span class=\"standings-point-value\">${s.point||0}</span>
-              <span class=\"standings-point-label\">POINTS</span>
-            </span>
+          <div class='driver-standings-team'>${team ? team : '-'}</div>
           </div>
-          <div class=\"driver-actions\">
-          <button class=\"crud-action edit\" onclick=\"editStandingsFiltered(${i})\">Edit</button>
-          <button class=\"crud-action delete\" onclick=\"deleteStandingsFiltered(${i})\">Hapus</button>
-          </div>
-        </div>
+        <div class='driver-standings-point'><span class='driver-standings-point-flag'><i class="fas fa-flag-checkered"></i></span><span class='driver-standings-point-value'>${s.point||0}</span> <span class='driver-standings-point-pts'>PTS</span></div>
       </div>
     `;
   }).join('');
 }
+
 function addStandingsForm(editIdx = null, prefill = {}) {
   const item = editIdx !== null ? driversStandings[editIdx] : {nama:'', point:0, tahun:''};
   const driverOptions = drivers.map(d => `<option value="${d.nama}"${item.nama===d.nama?' selected':''}>${d.nama} #${d.nomor_balap||''}</option>`).join('');
@@ -1461,7 +1458,7 @@ function addStandingsForm(editIdx = null, prefill = {}) {
   let tahunDefault = item.tahun || (driversStandings.length > 0 ? (Math.max(...driversStandings.map(s=>Number(s.tahun)||0))||new Date().getFullYear()) : new Date().getFullYear());
   showModal(`
     <button class='close-modal' onclick='closeModal()'>&times;</button>
-    <h3>${editIdx!==null?'Edit':'Tambah'} Standings</h3>
+    <h3>${editIdx!==null?'Edit':'Tambah'} Result</h3>
     <form id="standings-form" onsubmit="submitStandings(event,${editIdx!==null?editIdx:'null'})">
       <div class="form-group">
         <label class="required">Tahun</label>
@@ -1483,7 +1480,7 @@ function addStandingsForm(editIdx = null, prefill = {}) {
       </div>
       <div class="modal-actions">
         <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
-        <button type="submit" class="crud-btn">${editIdx!==null?'Update':'Simpan'} Standings</button>
+        <button type="submit" class="crud-btn">${editIdx!==null?'Update':'Simpan'} Result</button>
       </div>
     </form>
   `);
@@ -1505,7 +1502,7 @@ function updateStandingsYearFilter() {
 // Event listener filter tahun
 const filterTahunSelect = document.getElementById('filter-standings-tahun');
 if (filterTahunSelect) {
-  filterTahunSelect.addEventListener('change', renderDriversStandings);
+  filterTahunSelect.addEventListener('change', renderResult);
 }
 function submitStandings(e, idx) {
   e.preventDefault();
@@ -1526,7 +1523,7 @@ function submitStandings(e, idx) {
   hideFormLoading(form);
   showFormSuccess(form);
   closeModal();
-  renderDriversStandings();
+  renderResult();
 }
 function editStandingsFiltered(filteredIdx) {
   const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
@@ -1544,7 +1541,6 @@ function deleteStandingsFiltered(filteredIdx) {
   const tahunFilter = document.getElementById('filter-standings-tahun')?.value || '';
   let filtered = driversStandings;
   if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
-  // Urutkan sama seperti render
   filtered = [...filtered].sort((a, b) => b.point - a.point);
   const entry = filtered[filteredIdx];
   if (!entry) return;
@@ -1554,7 +1550,7 @@ function deleteStandingsFiltered(filteredIdx) {
     if (idx !== -1) {
       driversStandings.splice(idx,1);
       saveAllToLocal();
-      renderDriversStandings();
+      renderResult();
     }
   }
 }
@@ -1648,6 +1644,13 @@ function setupCrudDelegation() {
       deleteStandingsFiltered(idx);
     }
   };
+  // CONSTRUCTOR STANDINGS
+  document.getElementById('standings-list-constructor').onclick = function(e) {
+    if (e.target.classList.contains('delete')) {
+      const idx = Array.from(this.children).indexOf(e.target.closest('.card'));
+      deleteConstructorStandingsFiltered(idx);
+    }
+  };
 }
 
 // --- RESET DATA ---
@@ -1693,7 +1696,7 @@ if (resetBtn) {
 async function loadData() {
   // Cek apakah LocalStorage sudah ada data
   // Jika tidak ada, ambil dari file JSON dan simpan ke LocalStorage
-  const hasLocal = localStorage.getItem('f1_drivers') || localStorage.getItem('f1_teams') || localStorage.getItem('f1_grandsprix') || localStorage.getItem('f1_wdc') || localStorage.getItem('f1_wcc') || localStorage.getItem('f1_drivers_standings');
+  const hasLocal = localStorage.getItem('f1_drivers') || localStorage.getItem('f1_teams') || localStorage.getItem('f1_grandsprix') || localStorage.getItem('f1_wdc') || localStorage.getItem('f1_wcc') || localStorage.getItem('f1_drivers_standings') || localStorage.getItem('f1_constructor_standings');
   if (hasLocal) {
     loadAllFromLocal();
     console.log('Data diambil dari LocalStorage:', localStorage.getItem('f1_drivers'));
@@ -1705,6 +1708,7 @@ async function loadData() {
     wcc = await (await fetch('data/wcc.json')).json();
     grandsprix = await (await fetch('data/grandsprix.json')).json();
     driversStandings = await (await fetch('data/standings.json')).json();
+    constructorStandings = [];
     saveAllToLocal();
     console.log('Data diambil dari file JSON dan disimpan ke LocalStorage');
   }
@@ -1714,7 +1718,7 @@ async function loadData() {
   renderWDC();
   renderWCC();
   renderGrandPrix(null);
-  renderDriversStandings();
+  renderResult();
   updateGrandPrixYearFilterOptions && updateGrandPrixYearFilterOptions();
   updateGelarFromWDCWCC();
 }
@@ -1730,3 +1734,189 @@ if (tahunSelect) {
 }); 
 
 document.getElementById('add-standings-btn').onclick = () => addStandingsForm();
+
+// === LOGIC: Result Tabs ===
+document.addEventListener('DOMContentLoaded', function() {
+  const tabDriver = document.getElementById('tab-driver-standings');
+  const tabConstructor = document.getElementById('tab-constructor-standings');
+  const contentDriver = document.getElementById('result-driver-standings');
+  const contentConstructor = document.getElementById('result-constructor-standings');
+  if (tabDriver && tabConstructor && contentDriver && contentConstructor) {
+    tabDriver.onclick = function() {
+      tabDriver.classList.add('active');
+      tabConstructor.classList.remove('active');
+      contentDriver.style.display = '';
+      contentDriver.classList.add('active');
+      contentConstructor.style.display = 'none';
+      contentConstructor.classList.remove('active');
+    };
+    tabConstructor.onclick = function() {
+      tabConstructor.classList.add('active');
+      tabDriver.classList.remove('active');
+      contentConstructor.style.display = '';
+      contentConstructor.classList.add('active');
+      contentDriver.style.display = 'none';
+      contentDriver.classList.remove('active');
+    };
+  }
+});
+
+function addConstructorResultForm(editIdx = null, prefill = {}) {
+  // Data default
+  const tahunList = Array.from(new Set(teams.map(t => t.tahun).filter(Boolean))).sort((a,b)=>b-a);
+  const tahunDefault = prefill.tahun || (tahunList.length > 0 ? tahunList[0] : new Date().getFullYear());
+  const teamOptions = teams.map(t => `<option value="${t.nama}"${prefill.team===t.nama?' selected':''}>${t.nama}</option>`).join('');
+  const isEdit = editIdx !== null;
+  showModal(`
+    <button class='close-modal' onclick='closeModal()'>&times;</button>
+    <h3>${isEdit ? 'Edit' : 'Tambah'} Constructor Result</h3>
+    <form id="constructor-result-form">
+      <div class="form-group">
+        <label class="required">Tahun</label>
+        <input name="tahun" type="number" min="1950" max="2100" value="${tahunDefault}" required placeholder="Contoh: 2025">
+        <div class="error-message"></div>
+      </div>
+      <div class="form-group">
+        <label class="required">Team</label>
+        <select name="team" required ${isEdit ? 'disabled' : ''}>
+          <option value="">Pilih Team</option>
+          ${teamOptions}
+        </select>
+        <div class="error-message"></div>
+      </div>
+      <div class="form-group">
+        <label class="required">Point</label>
+        <input name="point" type="number" value="${prefill.point||0}" min="0" required>
+        <div class="error-message"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="crud-btn" onclick="closeModal()">Batal</button>
+        <button type="submit" class="crud-btn">${isEdit ? 'Update' : 'Simpan'} Constructor Result</button>
+      </div>
+    </form>
+  `);
+  // Attach submit event after modal is shown
+  setTimeout(() => {
+    const form = document.getElementById('constructor-result-form');
+    if (form) {
+      form.onsubmit = submitConstructorResult;
+    }
+  }, 50);
+}
+
+document.getElementById('add-standings-btn-constructor').onclick = () => addConstructorResultForm();
+
+function submitConstructorResult(e) {
+  e.preventDefault();
+  const form = e.target;
+  if (!validateForm(form)) return false;
+  const f = form;
+  const data = {
+    tahun: f.tahun.value,
+    team: f.team.value,
+    point: Number(f.point.value || 0)
+  };
+  // Cek jika sudah ada data untuk tahun & team, update, jika belum, push
+  const idx = constructorStandings.findIndex(cs => cs.tahun === data.tahun && cs.team === data.team);
+  if (idx !== -1) constructorStandings[idx] = data;
+  else constructorStandings.push(data);
+  saveAllToLocal();
+  hideFormLoading(form);
+  showFormSuccess(form);
+  setTimeout(() => {
+    closeModal();
+    renderConstructorStandings();
+  }, 300);
+}
+
+function updateConstructorStandingsYearFilter() {
+  const select = document.getElementById('filter-standings-tahun-constructor');
+  if (!select) return;
+  const tahunList = Array.from(new Set(constructorStandings.map(s => s.tahun).filter(Boolean))).sort((a,b)=>b-a);
+  const current = select.value;
+  select.innerHTML = tahunList.map(t => `<option value="${t}">${t}</option>`).join('');
+  // Pilih tahun terbaru jika belum ada yang dipilih
+  if (!tahunList.includes(current)) {
+    select.value = tahunList[0] || '';
+  } else {
+    select.value = current;
+  }
+}
+
+function renderConstructorStandings() {
+  const el = document.getElementById('standings-list-constructor');
+  updateConstructorStandingsYearFilter();
+  // Tambahkan event listener filter tahun setiap kali render
+  const filterTahunSelectConstructor = document.getElementById('filter-standings-tahun-constructor');
+  if (filterTahunSelectConstructor && !filterTahunSelectConstructor._listenerAdded) {
+    filterTahunSelectConstructor.addEventListener('change', renderConstructorStandings);
+    filterTahunSelectConstructor._listenerAdded = true;
+  }
+  if (!constructorStandings || constructorStandings.length === 0) {
+    el.innerHTML = '<div style="color:#888;text-align:center;margin:32px 0;">Belum ada data constructor standings.</div>';
+    return;
+  }
+  // Filter tahun
+  const tahunFilter = document.getElementById('filter-standings-tahun-constructor')?.value || '';
+  let filtered = constructorStandings;
+  if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
+  // Urutkan point menurun
+  const sorted = [...filtered].sort((a, b) => b.point - a.point);
+  el.innerHTML = sorted.map((s, i) => {
+    // Ambil data team dari teams
+    const t = teams.find(tm => tm.nama === s.team) || {};
+    const color = t && t.nama ? (t.warna || t.color || {
+      'McLaren F1 Team': '#ff8700',
+      'Ferrari': '#d40000',
+      'Mercedes': '#00c3e0',
+      'Red Bull Racing': '#1e2247',
+      'Aston Martin': '#00665e',
+      'Williams': '#005aff',
+      'Alpine': '#0051a2',
+      'Haas': '#b6babd',
+      'Kick Sauber': '#00e676',
+      'Racing Bulls': '#2e2d88',
+    }[t.nama] || '#1a237e') : '#1a237e';
+    const logo = t.logo ? `<img class='team-logo' src='${t.logo}' alt='${t.nama}'>` : '';
+    return `
+      <div class=\"card team-card team-flex-card\" style=\"border-left:8px solid ${color};display:flex;align-items:center;justify-content:space-between;min-height:64px;\">
+        <div style=\"display:flex;align-items:center;gap:16px;\">
+          <div class=\"team-logo-wrap\" style=\"width:36px;height:36px;\">${logo}</div>
+          <span class=\"team-name\" style=\"color:${color};font-size:1.2rem;font-weight:600;\">${s.team}</span>
+        </div>
+        <div style=\"display:flex;align-items:center;gap:16px;\">
+          <div style=\"font-size:1.3rem;font-weight:400;\"><span class='constructor-standings-point-value'>${s.point}</span> <span class='point-pts'>PTS</span></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function editConstructorStandingsFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-standings-tahun-constructor')?.value || '';
+  let filtered = constructorStandings;
+  if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
+  filtered = [...filtered].sort((a, b) => b.point - a.point);
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  // Cari index asli di array utama
+  const idx = constructorStandings.findIndex(s => s.team === entry.team && String(s.tahun) === String(entry.tahun));
+  if (idx !== -1) addConstructorResultForm(idx, constructorStandings[idx]);
+}
+function deleteConstructorStandingsFiltered(filteredIdx) {
+  const tahunFilter = document.getElementById('filter-standings-tahun-constructor')?.value || '';
+  let filtered = constructorStandings;
+  if (tahunFilter) filtered = filtered.filter(s => String(s.tahun) === String(tahunFilter));
+  filtered = [...filtered].sort((a, b) => b.point - a.point);
+  const entry = filtered[filteredIdx];
+  if (!entry) return;
+  if (confirm('Hapus constructor standings ini?')) {
+    // Cari index asli di array utama
+    const idx = constructorStandings.findIndex(s => s.team === entry.team && String(s.tahun) === String(entry.tahun));
+    if (idx !== -1) {
+      constructorStandings.splice(idx,1);
+      saveAllToLocal();
+      renderConstructorStandings();
+    }
+  }
+}

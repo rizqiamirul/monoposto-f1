@@ -22,9 +22,9 @@
   </header>
   <nav id="main-navbar">
     <a id="nav-drivers" href="#drivers"><i class="fas fa-user"></i> Drivers</a>
-    <a id="nav-drivers-standings" href="#drivers-standings"><i class="fas fa-list-ol"></i> Drivers Standings</a>
+    <a id="nav-drivers-standings" href="#drivers-standings"><i class="fas fa-flag"></i> Result</a>
     <a id="nav-teams" href="#teams"><i class="fas fa-users"></i> Teams</a>
-    <a id="nav-grandsprix" href="#grandsprix"><i class="fas fa-flag-checkered"></i> Grand Prix</a>
+    <a id="nav-grandsprix" href="#grandsprix"><i class="fas fa-route"></i> Grand Prix</a>
     <a id="nav-wdc" href="#wdc"><i class="fas fa-trophy"></i> World Driver Champions</a>
     <a id="nav-wcc" href="#wcc"><i class="fas fa-car"></i> World Constructor Champions</a>
   </nav>
@@ -35,11 +35,25 @@
       <div id="drivers-list"></div>
     </section>
     <section id="drivers-standings" class="f1-section">
-      <h2>Drivers Standings</h2>
+      <nav class="result-tabs-navbar">
+        <div class="result-tabs">
+          <button id="tab-driver-standings" class="result-tab active">Driver Standings</button>
+          <button id="tab-constructor-standings" class="result-tab">Constructor Standings</button>
+        </div>
+      </nav>
+      <h2>Result</h2>
+      <div id="result-driver-standings" class="result-tab-content active">
       <label for="filter-standings-tahun" class="standings-filter-label">Filter Tahun:</label>
       <select id="filter-standings-tahun" class="standings-filter-select"></select>
-      <button id="add-standings-btn" class="crud-btn">Tambah Standings</button>
+        <button id="add-standings-btn" class="crud-btn">Tambah Result</button>
       <div id="standings-list"></div>
+      </div>
+      <div id="result-constructor-standings" class="result-tab-content" style="display:none;">
+        <label for="filter-standings-tahun-constructor" class="standings-filter-label">Filter Tahun:</label>
+        <select id="filter-standings-tahun-constructor" class="standings-filter-select"></select>
+        <button id="add-standings-btn-constructor" class="crud-btn">Tambah Constructor Result</button>
+        <div id="standings-list-constructor"></div>
+      </div>
     </section>
     <section id="teams" class="f1-section">
       <h2>Teams</h2>
@@ -66,7 +80,7 @@
   </main>
   <button id="reset-data-btn" class="crud-btn reset-hidden-btn">Reset Data</button>
   <footer>
-    <p>&copy; 2024 Rekap Formula One - Monoposto Fan</p>
+    <p>&copy; Monoposto Formula One Championship - by rzqamrl</p>
   </footer>
   <div id="modal-bg" class="modal-bg" style="display:none;">
     <div id="modal" class="modal"></div>
